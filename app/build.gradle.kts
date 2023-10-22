@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.muham.petv01"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.muham.petv01"

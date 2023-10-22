@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/itHome"
+        android:title="HOME"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ithome"></item>
+    <item
+        android:id="@+id/itForum"
+        android:title="Forum"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/itforum"></item>
+    <item
+        android:id="@+id/itEnsyclopedia"
+        android:title="Ensyclopedia"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/itensyclopedia"></item>
+    <item
+        android:id="@+id/itAccount"
+        android:title="Account"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/itaccount"></item>
+</menu>
