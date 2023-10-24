@@ -21,10 +21,10 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="60dp"
+                android:layout_width="120dp"
                 android:layout_height="17dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="10dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:src="@drawable/searchicon" />
@@ -41,9 +41,18 @@
                 android:textColorHint="@color/bone_white"
                 android:textSize="15sp"
                 android:hint="Ara"/>
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="150dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/postadd" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/forumRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

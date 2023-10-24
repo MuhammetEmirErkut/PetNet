@@ -5,6 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.muham.petv01.Adapters.ForumPostRecyclerViewAdapter
+import com.muham.petv01.Inheritance.ItemForPost
 import com.muham.petv01.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -19,6 +23,11 @@ private const val ARG_PARAM2 = "param2"
  */
 class ForumFragment : Fragment() {
     // TODO: Rename and change types of parameters
+
+    private lateinit var forumRecyclerView: RecyclerView
+    private lateinit var forumPostRecyclerViewAdapter: ForumPostRecyclerViewAdapter
+    private lateinit var itemList: List<ItemForPost>
+
     private var param1: String? = null
     private var param2: String? = null
 
@@ -34,9 +43,29 @@ class ForumFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val view = inflater.inflate(R.layout.fragment_forum, container, false)
+
+        itemList = generateDummyList(20)
+
+        forumRecyclerView = view.findViewById(R.id.forumRecyclerView)
+        forumPostRecyclerViewAdapter = ForumPostRecyclerViewAdapter(itemList)
+        forumRecyclerView.adapter = forumPostRecyclerViewAdapter
+        forumRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_forum, container, false)
+        return view
     }
+
+    private fun generateDummyList(size: Int): List<ItemForPost> {
+        val list = ArrayList<ItemForPost>()
+        for (i in 0 until size) {
+            val item = ItemForPost("Item $i", "UserName $i", "*$i h", "Title $i", "Content $i")
+            list += item
+        }
+        return list
+    }
+
 
     companion object {
         /**
