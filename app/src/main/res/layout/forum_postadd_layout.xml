@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/forumpost_fragment_container"
+    android:background="@color/backgrounddark_color"
+    android:orientation="vertical">
+
+    <!-- Gönderi İçeriği -->
+    <ImageView
+        android:id="@+id/forumpost_backButton"
+        android:layout_width="60dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/baseline_west_24" />
+
+    <TextView
+        android:id="@+id/postUselessTitletextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="33dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:textColor="@color/bone_white"
+        android:text="* Title" />
+
+    <EditText
+        android:id="@+id/post_title_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/forumsearch_background"
+        android:gravity="start"
+        android:hint="Gönderi başlığını buraya yazın"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/white"
+        android:textColorHint="@color/bone_white" />
+
+    <TextView
+        android:id="@+id/postUselessContentextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="33dp"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center"
+        android:textColor="@color/bone_white"
+        android:text="* Content" />
+
+    <EditText
+        android:id="@+id/post_content_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginHorizontal="30dp"
+        android:gravity="start"
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/white"
+        android:background="@drawable/forumsearch_background"
+        android:textColorHint="@color/bone_white"
+        android:hint="Gönderi içeriğinizi buraya yazın" />
+
+    <!-- Gönder Butonu -->
+    <TextView
+        android:id="@+id/postContentSizeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="50dp"
+        android:gravity="end"
+        android:textColor="@color/bone_white"
+        android:text=" * 0/500" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/post_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_gravity="end"
+        android:background="@drawable/accountplaintext_background"
+        android:textColor="@color/white"
+        android:text="Send" />
+</LinearLayout>

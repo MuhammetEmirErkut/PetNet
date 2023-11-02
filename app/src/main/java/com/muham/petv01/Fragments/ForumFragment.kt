@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.muham.petv01.Adapters.ForumPostRecyclerViewAdapter
@@ -52,6 +54,15 @@ class ForumFragment : Fragment() {
         forumRecyclerView.adapter = forumPostRecyclerViewAdapter
         forumRecyclerView.layoutManager = LinearLayoutManager(activity)
 
+        // ForumFragment içinde, onCreateView() fonksiyonu içinde onClickListener ekle
+        val postButton = view.findViewById<ImageView>(R.id.postButton)
+        postButton.setOnClickListener {
+            val forumPostFragment = ForumPostFragment()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.forum_fragment_container, forumPostFragment)
+                .addToBackStack("ForumFragment")
+                .commit()
+        }
 
         // Inflate the layout for this fragment
         return view

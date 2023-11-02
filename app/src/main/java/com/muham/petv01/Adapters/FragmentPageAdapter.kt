@@ -7,6 +7,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.muham.petv01.Fragments.AccountFragment
 import com.muham.petv01.Fragments.EnsyclopediaFragment
 import com.muham.petv01.Fragments.ForumFragment
+import com.muham.petv01.Fragments.ForumPostFragment
 import com.muham.petv01.Fragments.HomeFragment
 
 class FragmentPageAdapter (
@@ -18,13 +19,12 @@ class FragmentPageAdapter (
     }
 
     override fun createFragment(position: Int): Fragment {
-        return if (position == 0)
-            HomeFragment()
-        else if(position == 1)
-            ForumFragment()
-        else if(position == 2)
-            EnsyclopediaFragment()
-        else
-            AccountFragment()
+        return when (position) {
+            0 -> HomeFragment()
+            1 -> ForumFragment() // ForumPostFragment'ı buraya ekleyin
+            2 -> EnsyclopediaFragment()
+            3 -> AccountFragment()
+            else -> HomeFragment()
+        }
     }
 }
