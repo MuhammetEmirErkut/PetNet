@@ -1,13 +1,21 @@
 package com.muham.petv01.Fragments
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.muham.petv01.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -25,6 +33,12 @@ class ForumPostFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var postTitleEditText: EditText
+    private lateinit var postContentEditText: EditText
+    private lateinit var postSendButton: Button
+
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -39,6 +53,41 @@ class ForumPostFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.forum_postadd_layout, container, false)
 
+        postTitleEditText = view.findViewById(R.id.post_title_edittext)
+        postContentEditText = view.findViewById(R.id.post_content_edittext)
+        postSendButton = view.findViewById(R.id.postSendButton)
+
+        auth = FirebaseAuth.getInstance() // auth nesnesini burada başlatın
+
+        postSendButton.setOnClickListener {
+            val title = postTitleEditText.text.toString()
+            val content = postContentEditText.text.toString()
+
+            // Auth nesnesi artık başlatılmış olacak, Firebase işlemlerinizi gerçekleştirebilirsiniz.
+
+            // Firestore veritabanına erişim sağlayarak 'forum' koleksiyonuna yeni bir belge ekleyebilirsiniz.
+            val db = Firebase.firestore
+            val forumCollection = db.collection("forum")
+
+            // Yeni bir belge oluşturarak verileri ekleyin
+            val newForumPost = hashMapOf(
+                "title" to title,
+                "content" to content,
+                "author" to auth.currentUser?.uid,
+                "timestamp" to FieldValue.serverTimestamp()
+            )
+
+            // Belgeyi ekleyin
+            forumCollection.add(newForumPost)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                    parentFragmentManager.popBackStack()
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                }
+        }
+
         val backButton = view.findViewById<ImageView>(R.id.forumpost_backButton)
         backButton.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -46,6 +95,7 @@ class ForumPostFragment : Fragment() {
 
         return view
     }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (enter) {
             return AnimationUtils.loadAnimation(activity, R.anim.slide_in_from_top)
