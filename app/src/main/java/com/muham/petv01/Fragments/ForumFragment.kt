@@ -1,34 +1,36 @@
 package com.muham.petv01.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.muham.petv01.Adapters.ForumPostRecyclerViewAdapter
 import com.muham.petv01.Inheritance.ItemForPost
 import com.muham.petv01.R
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ForumFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ForumFragment : Fragment() {
-    // TODO: Rename and change types of parameters
 
+
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var forumRecyclerView: RecyclerView
     private lateinit var forumPostRecyclerViewAdapter: ForumPostRecyclerViewAdapter
-    private lateinit var itemList: List<ItemForPost>
+    private lateinit var itemList: MutableList<ItemForPost>
+
+    // Firestore veritabanı
+    private val db = FirebaseFirestore.getInstance()
 
     private var param1: String? = null
     private var param2: String? = null
@@ -47,12 +49,30 @@ class ForumFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_forum, container, false)
 
-        itemList = generateDummyList(20)
+        itemList = mutableListOf()
 
         forumRecyclerView = view.findViewById(R.id.forumRecyclerView)
         forumPostRecyclerViewAdapter = ForumPostRecyclerViewAdapter(itemList)
         forumRecyclerView.adapter = forumPostRecyclerViewAdapter
         forumRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        // Firestore'dan verileri çekip itemList'e ekleyen fonksiyonu çağır
+        loadForumData()
+
+
+        //Refresh
+        val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            // Yeniden yükleme işlemlerini burada yap
+
+            // Örneğin, loadForumData() fonksiyonunu çağırabilirsiniz
+            refreshForumData()
+
+            // Yeniden yükleme tamamlandığında yenilemeyi bitir
+            swipeRefreshLayout.isRefreshing = false
+        }
+        //////////////////
 
         // ForumFragment içinde, onCreateView() fonksiyonu içinde onClickListener ekle
         val postButton = view.findViewById<ImageView>(R.id.postButton)
@@ -67,27 +87,85 @@ class ForumFragment : Fragment() {
         // Inflate the layout for this fragment
         return view
     }
+    private fun refreshForumData(){
+        val addedDocumentIds = mutableListOf<String>()
 
-    private fun generateDummyList(size: Int): List<ItemForPost> {
-        val list = ArrayList<ItemForPost>()
-        for (i in 0 until size) {
-            val item = ItemForPost("Item $i", "UserName $i", "*$i h", "Title $i", "Content $i")
-            list += item
+// Daha önce eklenmiş belgelerin kimliklerini al
+        for (item in itemList) {
+            addedDocumentIds.add(item.documentId)
         }
-        return list
+
+        db.collection("forum")
+            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Yeniden eskiye doğru sırala
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    // Belge kimliğine eriş
+                    val documentId = document.id
+
+                    // Eğer bu belge daha önce eklenmişse, geç
+                    if (addedDocumentIds.contains(documentId)) {
+                        continue
+                    }
+
+                    // Verileri al ve itemList'e ekle
+                    val title = document.getString("title") ?: ""
+                    val content = document.getString("content") ?: ""
+                    val userName = document.getString("userName") ?: ""
+                    val timestamp = document.getTimestamp("timestamp")
+                    val time = if (timestamp != null) {
+                        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                        sdf.format(timestamp.toDate())
+                    } else {
+                        ""
+                    }
+                    val author = document.getString("author") ?: ""
+
+                    // Belge kimliğini kullanarak yeni bir ItemForPost nesnesi oluştur
+                    val item = ItemForPost("null", userName, time, title, content, documentId)
+
+                    itemList.add(0, item)
+                }
+                // Adaptera değişikliği bildir
+                forumPostRecyclerViewAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.w("ForumFragment", "Error getting documents: ", exception)
+            }
+
+    }
+    private fun loadForumData() {
+        // Firestore koleksiyonundan verileri çek
+        db.collection("forum")
+            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Yeniden eskiye doğru sırala
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val documnetId = document.id
+                    // Verileri al ve itemList'e ekle
+                    val title = document.getString("title") ?: ""
+                    val content = document.getString("content") ?: ""
+                    val userName = document.getString("userName") ?: ""
+                    val timestamp = document.getTimestamp("timestamp")
+                    val time = if (timestamp != null) {
+                        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                        sdf.format(timestamp.toDate())
+                    } else {
+                        ""
+                    }
+                    val author = document.getString("author") ?: ""
+                    val item = ItemForPost("null", userName, time, title, content, documnetId)
+                    itemList.add(item)
+                }
+                // Adaptera değişikliği bildir
+                forumPostRecyclerViewAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.w("ForumFragment", "Error getting documents: ", exception)
+            }
     }
 
-
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ForumFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             ForumFragment().apply {
