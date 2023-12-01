@@ -1,5 +1,6 @@
 package com.muham.petv01.Fragments
 
+import android.content.ContentValues
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,8 +11,12 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.muham.petv01.Adapters.ForumPostRecyclerViewAdapter
 import com.muham.petv01.Inheritance.ItemForPost
 import com.muham.petv01.R
@@ -29,8 +34,13 @@ class ForumFragment : Fragment() {
     private lateinit var forumPostRecyclerViewAdapter: ForumPostRecyclerViewAdapter
     private lateinit var itemList: MutableList<ItemForPost>
 
+    private val likedPostIds = mutableSetOf<String>()
+
+
+
     // Firestore veritabanı
     private val db = FirebaseFirestore.getInstance()
+    private lateinit var auth: FirebaseAuth
 
     private var param1: String? = null
     private var param2: String? = null
@@ -55,6 +65,11 @@ class ForumFragment : Fragment() {
         forumPostRecyclerViewAdapter = ForumPostRecyclerViewAdapter(itemList)
         forumRecyclerView.adapter = forumPostRecyclerViewAdapter
         forumRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+
+        auth = FirebaseAuth.getInstance()
+
+
 
         // Firestore'dan verileri çekip itemList'e ekleyen fonksiyonu çağır
         loadForumData()
@@ -122,7 +137,7 @@ class ForumFragment : Fragment() {
                     val author = document.getString("author") ?: ""
 
                     // Belge kimliğini kullanarak yeni bir ItemForPost nesnesi oluştur
-                    val item = ItemForPost("null", userName, time, title, content, documentId)
+                    val item = ItemForPost("null", userName, time, title, content, documentId,0, false)
 
                     itemList.add(0, item)
                 }
@@ -153,8 +168,16 @@ class ForumFragment : Fragment() {
                     } else {
                         ""
                     }
-                    val author = document.getString("author") ?: ""
-                    val item = ItemForPost("null", userName, time, title, content, documnetId)
+
+                    // Firestore'dan çekilen likes listesini kontrol et
+                    val likesList = document.get("likes") as? List<String> ?: emptyList()
+                    val likedByCurrentUser = auth.currentUser?.uid in likesList
+
+                    // Like sayısını likes listesinin eleman sayısı olarak ayarla
+                    val likeCount = likesList.size
+
+
+                    val item = ItemForPost("null", userName, time, title, content, documnetId, likeCount, likedByCurrentUser)
                     itemList.add(item)
                 }
                 // Adaptera değişikliği bildir
@@ -164,6 +187,12 @@ class ForumFragment : Fragment() {
                 Log.w("ForumFragment", "Error getting documents: ", exception)
             }
     }
+
+
+
+
+
+
 
     companion object {
         @JvmStatic

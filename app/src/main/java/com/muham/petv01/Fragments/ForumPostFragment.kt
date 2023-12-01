@@ -37,6 +37,7 @@ class ForumPostFragment : Fragment() {
     private lateinit var postContentEditText: EditText
     private lateinit var postSendButton: Button
 
+
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +58,8 @@ class ForumPostFragment : Fragment() {
         postContentEditText = view.findViewById(R.id.post_content_edittext)
         postSendButton = view.findViewById(R.id.postSendButton)
 
+
+
         auth = FirebaseAuth.getInstance() // auth nesnesini burada başlatın
 
         postSendButton.setOnClickListener {
@@ -74,7 +77,8 @@ class ForumPostFragment : Fragment() {
                 "title" to title,
                 "content" to content,
                 "author" to auth.currentUser?.uid,
-                "timestamp" to FieldValue.serverTimestamp()
+                "timestamp" to FieldValue.serverTimestamp(),
+                "likes" to arrayListOf<String>()
             )
 
             // Belgeyi ekleyin
@@ -95,6 +99,8 @@ class ForumPostFragment : Fragment() {
 
         return view
     }
+
+
 
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (enter) {
