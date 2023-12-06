@@ -64,22 +64,23 @@ class SigninFragment : Fragment() {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Log.d(TAG, "createUserWithEmail:success")
                         val user = auth.currentUser
+                        val uid = user?.uid
 
                         // Firestore veri ekleme
                         val db = Firebase.firestore
                         val person = hashMapOf(
+                            "userId" to uid,
                             "firstName" to name,
                             "lastName" to surname,
                             "email" to email,
                             "password" to password
                         )
 
-                        db.collection("Persons")
-                            .add(person)
-                            .addOnSuccessListener { documentReference ->
-                                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                        db.collection("Persons").document(uid!!)
+                            .set(person)
+                            .addOnSuccessListener {
+                                Log.d(TAG, "DocumentSnapshot added with ID: $uid")
 
                                 val intent = Intent(requireContext(), MainActivity::class.java)
                                 startActivity(intent)
@@ -91,6 +92,7 @@ class SigninFragment : Fragment() {
                         Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     }
                 }
+
             val viewPager = activity?.findViewById<ViewPager2>(R.id.signinViewPager)
             viewPager?.currentItem = 1
         }
@@ -109,3 +111,4 @@ class SigninFragment : Fragment() {
             }
     }
 }
+

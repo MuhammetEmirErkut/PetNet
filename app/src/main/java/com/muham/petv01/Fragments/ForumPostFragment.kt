@@ -62,40 +62,51 @@ class ForumPostFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance() // auth nesnesini burada başlatın
 
+        // Inside the postSendButton.setOnClickListener block
         postSendButton.setOnClickListener {
             val title = postTitleEditText.text.toString()
             val content = postContentEditText.text.toString()
 
-            // Auth nesnesi artık başlatılmış olacak, Firebase işlemlerinizi gerçekleştirebilirsiniz.
-
-            // Firestore veritabanına erişim sağlayarak 'forum' koleksiyonuna yeni bir belge ekleyebilirsiniz.
             val db = Firebase.firestore
             val forumCollection = db.collection("forum")
 
-            // Yeni bir belge oluşturarak verileri ekleyin
-            val newForumPost = hashMapOf(
-                "title" to title,
-                "content" to content,
-                "author" to auth.currentUser?.uid,
-                "timestamp" to FieldValue.serverTimestamp(),
-                "likes" to arrayListOf<String>()
-            )
+            // Retrieve user information from the Persons collection
+            val userDocRef = db.collection("Persons").document(auth.currentUser?.uid ?: "")
+            userDocRef.get()
+                .addOnSuccessListener { userSnapshot ->
+                    if (userSnapshot.exists()) {
+                        val firstName = userSnapshot.getString("firstName") ?: ""
+                        val lastName = userSnapshot.getString("lastName") ?: ""
 
-            // Belgeyi ekleyin
-            forumCollection.add(newForumPost)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                    parentFragmentManager.popBackStack()
+                        // Combine first name and last name to create a username
+                        val username = "$firstName $lastName"
+
+                        // Now, you can use the 'username' in your post
+                        val newForumPost = hashMapOf(
+                            "title" to title,
+                            "content" to content,
+                            "author" to auth.currentUser?.uid,
+                            "username" to username, // Include the username in the post
+                            "timestamp" to FieldValue.serverTimestamp(),
+                            "likes" to arrayListOf<String>()
+                        )
+
+                        // Add the new post to the 'forum' collection
+                        forumCollection.add(newForumPost)
+                            .addOnSuccessListener { documentReference ->
+                                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                                parentFragmentManager.popBackStack()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.w(TAG, "Error adding document", e)
+                            }
+                    }
                 }
                 .addOnFailureListener { e ->
-                    Log.w(TAG, "Error adding document", e)
+                    Log.w(TAG, "Error getting user document", e)
                 }
         }
 
-        val backButton = view.findViewById<ImageView>(R.id.forumpost_backButton)
-        backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
 
         return view
     }

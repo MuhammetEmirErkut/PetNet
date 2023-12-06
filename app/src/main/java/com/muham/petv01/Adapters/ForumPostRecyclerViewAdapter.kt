@@ -1,18 +1,21 @@
 package com.muham.petv01.Adapters
 
 import android.content.ContentValues.TAG
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.*
 import com.google.firebase.ktx.Firebase
+import com.muham.petv01.BottomSheets.CommentBottomSheetFragment
 import com.muham.petv01.Inheritance.ItemForPost
 import com.muham.petv01.R
 
@@ -27,7 +30,10 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
         val postContentTextView: TextView = itemView.findViewById(R.id.postContentTextView)
         val likeNumberTextView: TextView = itemView.findViewById(R.id.likeNumberTextView)
         val likePostButton: ImageView = itemView.findViewById(R.id.likePostButton)
+        val commentPostImageView: ImageView = itemView.findViewById(R.id.commentPostImageView)
+        val commentNumberTextView: TextView = itemView.findViewById(R.id.commentNumberTextView)
         var auth: FirebaseAuth = FirebaseAuth.getInstance() // FirebaseAuth örneğini burada doğru bir şekilde tanımlayın
+
     }
 
     override fun onCreateViewHolder(
@@ -51,6 +57,7 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
         holder.postTitleTextView.text = currentItem.title
         holder.postContentTextView.text = currentItem.content
         holder.likeNumberTextView.text = currentItem.like.toString()
+
 
         // Set the initial state of the like button based on likedByCurrentUser
         holder.likePostButton.setImageResource(
@@ -78,6 +85,51 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
                 unlikePost(postId, holder.auth, holder.likeNumberTextView)
             }
         }
+
+        holder.commentPostImageView.setOnClickListener {
+            holder.commentPostImageView.setOnClickListener {
+                val commentBottomSheetFragment = CommentBottomSheetFragment()
+
+                // Alttaki kod, tıklanan öğenin belge ID'sini alacaktır
+                val postId = itemList[position].documentId
+                val bundle = Bundle()
+                bundle.putString("postId", postId)
+                commentBottomSheetFragment.arguments = bundle
+
+                commentBottomSheetFragment.show((holder.itemView.context as FragmentActivity).supportFragmentManager, commentBottomSheetFragment.tag)
+            }
+        }
+        //Comment Count
+
+        val postId = itemList[position].documentId
+        updateCommentCount(postId, holder.commentNumberTextView)
+
+    }
+    private fun updateCommentCount(postId: String, commentNumberTextView: TextView) {
+        val postReference = Firebase.firestore.collection("forum").document(postId)
+
+        postReference.get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()) {
+                    val post = documentSnapshot.toObject(ItemForPost::class.java)
+
+                    // Comment sayısını kontrol et ve commentNumberTextView'a yerleştir
+                    val commentCount = post?.comments?.size ?: 0
+                    commentNumberTextView.text = commentCount.toString()
+
+                    // Firebase Firestore'da comment sayısını güncelle
+                    postReference.update("commentCount", commentCount)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Comment Count Successfully Updated")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error updating comment count", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error getting document", e)
+            }
     }
 
 
@@ -119,6 +171,7 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
                 Log.w(TAG, "Error unliking post", e)
             }
     }
+
 
 
     override fun getItemCount(): Int {

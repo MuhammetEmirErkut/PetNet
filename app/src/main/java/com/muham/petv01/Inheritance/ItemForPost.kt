@@ -8,5 +8,19 @@ data class ItemForPost(
     val content: String,
     val documentId: String,
     var like: Int,
-    var likedByCurrentUser: Boolean // Yeni eklenen değişken
-)
+    var likedByCurrentUser: Boolean,
+    var comments: List<Comment> = mutableListOf()
+) {
+    // Boş argüman yapıcısı
+    constructor() : this("", "", "", "", "", "", 0, false, mutableListOf())
+}
+
+data class Comment(
+    val userId: String,
+    val userName: String,
+    val content: String
+) {
+    // Boş argüman yapıcısı
+    constructor() : this("", "", "")
+}
+

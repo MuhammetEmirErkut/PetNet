@@ -18,6 +18,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.muham.petv01.Adapters.ForumPostRecyclerViewAdapter
+import com.muham.petv01.Inheritance.Comment
 import com.muham.petv01.Inheritance.ItemForPost
 import com.muham.petv01.R
 import java.text.SimpleDateFormat
@@ -134,10 +135,11 @@ class ForumFragment : Fragment() {
                     } else {
                         ""
                     }
-                    val author = document.getString("author") ?: ""
+                    val likesList = document.get("likes") as? List<String> ?: emptyList()
+                    val likeCount = likesList.size
 
                     // Belge kimliğini kullanarak yeni bir ItemForPost nesnesi oluştur
-                    val item = ItemForPost("null", userName, time, title, content, documentId,0, false)
+                    val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, false)
 
                     itemList.add(0, item)
                 }
@@ -160,7 +162,7 @@ class ForumFragment : Fragment() {
                     // Verileri al ve itemList'e ekle
                     val title = document.getString("title") ?: ""
                     val content = document.getString("content") ?: ""
-                    val userName = document.getString("userName") ?: ""
+                    val userName = document.getString("username") ?: ""
                     val timestamp = document.getTimestamp("timestamp")
                     val time = if (timestamp != null) {
                         val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
@@ -175,7 +177,6 @@ class ForumFragment : Fragment() {
 
                     // Like sayısını likes listesinin eleman sayısı olarak ayarla
                     val likeCount = likesList.size
-
 
                     val item = ItemForPost("null", userName, time, title, content, documnetId, likeCount, likedByCurrentUser)
                     itemList.add(item)
