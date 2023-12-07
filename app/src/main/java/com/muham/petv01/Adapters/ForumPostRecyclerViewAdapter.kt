@@ -87,17 +87,17 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
         }
 
         holder.commentPostImageView.setOnClickListener {
-            holder.commentPostImageView.setOnClickListener {
-                val commentBottomSheetFragment = CommentBottomSheetFragment()
 
-                // Alttaki kod, tıklanan öğenin belge ID'sini alacaktır
-                val postId = itemList[position].documentId
-                val bundle = Bundle()
-                bundle.putString("postId", postId)
-                commentBottomSheetFragment.arguments = bundle
+            val commentBottomSheetFragment = CommentBottomSheetFragment()
 
-                commentBottomSheetFragment.show((holder.itemView.context as FragmentActivity).supportFragmentManager, commentBottomSheetFragment.tag)
-            }
+            // Alttaki kod, tıklanan öğenin belge ID'sini alacaktır
+            val postId = itemList[position].documentId
+            val bundle = Bundle()
+            bundle.putString("postId", postId)
+            commentBottomSheetFragment.arguments = bundle
+
+            commentBottomSheetFragment.show((holder.itemView.context as FragmentActivity).supportFragmentManager, commentBottomSheetFragment.tag)
+
         }
         //Comment Count
 
