@@ -103,10 +103,10 @@ class ForumFragment : Fragment() {
         // Inflate the layout for this fragment
         return view
     }
-    private fun refreshForumData(){
+    private fun refreshForumData() {
         val addedDocumentIds = mutableListOf<String>()
 
-// Daha önce eklenmiş belgelerin kimliklerini al
+        // Daha önce eklenmiş belgelerin kimliklerini al
         for (item in itemList) {
             addedDocumentIds.add(item.documentId)
         }
@@ -121,6 +121,9 @@ class ForumFragment : Fragment() {
 
                     // Eğer bu belge daha önce eklenmişse, geç
                     if (addedDocumentIds.contains(documentId)) {
+                        // Update like count for existing items in itemList
+                        val existingItem = itemList.find { it.documentId == documentId }
+                        existingItem?.like = (document.get("likes") as? List<String> ?: emptyList()).size
                         continue
                     }
 
@@ -149,8 +152,8 @@ class ForumFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.w("ForumFragment", "Error getting documents: ", exception)
             }
-
     }
+
     private fun loadForumData() {
         // Firestore koleksiyonundan verileri çek
         db.collection("forum")
