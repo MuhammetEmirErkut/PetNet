@@ -10,9 +10,9 @@
         android:id="@+id/view5"
         android:layout_width="100dp"
         android:layout_height="3dp"
+        android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:background="@color/bone_white"
-        android:layout_gravity="center"/>
+        android:background="@color/backgroundsoft_color" />
 
     <LinearLayout
         android:layout_width="match_parent"
