@@ -11,6 +11,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -36,6 +37,7 @@ class ForumPostFragment : Fragment() {
     private lateinit var postTitleEditText: EditText
     private lateinit var postContentEditText: EditText
     private lateinit var postSendButton: Button
+    private lateinit var forumPostBackButton: ImageView
 
 
     private lateinit var auth: FirebaseAuth
@@ -57,6 +59,7 @@ class ForumPostFragment : Fragment() {
         postTitleEditText = view.findViewById(R.id.post_title_edittext)
         postContentEditText = view.findViewById(R.id.post_content_edittext)
         postSendButton = view.findViewById(R.id.postSendButton)
+        forumPostBackButton = view.findViewById(R.id.forumpost_backButton)
 
 
 
@@ -105,6 +108,12 @@ class ForumPostFragment : Fragment() {
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error getting user document", e)
                 }
+
+            forumPostBackButton.setOnClickListener {
+                Log.d(TAG, "forumPostBackButton clicked")
+                parentFragmentManager.popBackStack()
+            }
+
         }
 
 

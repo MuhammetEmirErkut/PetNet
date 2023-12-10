@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.*
 import com.google.firebase.ktx.Firebase
 import com.muham.petv01.BottomSheets.CommentBottomSheetFragment
+import com.muham.petv01.BottomSheets.PostMoreBottomSheetFragment
 import com.muham.petv01.Inheritance.ItemForPost
 import com.muham.petv01.R
 
@@ -32,9 +33,12 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
         val likePostButton: ImageView = itemView.findViewById(R.id.likePostButton)
         val commentPostImageView: ImageView = itemView.findViewById(R.id.commentPostImageView)
         val commentNumberTextView: TextView = itemView.findViewById(R.id.commentNumberTextView)
+        val postMoreImageView: ImageView = itemView.findViewById(R.id.postMoreImageView)
         var auth: FirebaseAuth = FirebaseAuth.getInstance() // FirebaseAuth örneğini burada doğru bir şekilde tanımlayın
 
     }
+
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -86,6 +90,8 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
             }
         }
 
+        //Comment Bottom Sheet Fragment
+
         holder.commentPostImageView.setOnClickListener {
 
             val commentBottomSheetFragment = CommentBottomSheetFragment()
@@ -99,7 +105,21 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
             commentBottomSheetFragment.show((holder.itemView.context as FragmentActivity).supportFragmentManager, commentBottomSheetFragment.tag)
 
         }
-        //Comment Count
+        // Post More Bottom Sheet
+
+        holder.postMoreImageView.setOnClickListener {
+
+            val postMoreBottomSheetFragment = PostMoreBottomSheetFragment()
+
+            // Alttaki kod, tıklanan öğenin belge ID'sini alacaktır
+            val postId = itemList[position].documentId
+            val bundle = Bundle()
+            bundle.putString("postId", postId)
+            postMoreBottomSheetFragment.arguments = bundle
+
+            postMoreBottomSheetFragment.show((holder.itemView.context as FragmentActivity).supportFragmentManager, postMoreBottomSheetFragment.tag)
+
+        }
 
         val postId = itemList[position].documentId
         updateCommentCount(postId, holder.commentNumberTextView)

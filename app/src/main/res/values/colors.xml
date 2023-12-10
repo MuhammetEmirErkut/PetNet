@@ -6,4 +6,7 @@
     <color name="background_color">#171717</color>
     <color name="backgroundsoft_color">#303030</color>
     <color name="backgrounddark_color">#070707</color>
+    <color name="red">#EC0707</color>
+    <color name="soft_red">#FD4141</color>
+    <color name="green">#43DA19</color>
 </resources>

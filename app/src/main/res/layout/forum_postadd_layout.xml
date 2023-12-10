@@ -7,12 +7,14 @@
     android:orientation="vertical">
 
     <!-- Gönderi İçeriği -->
+
     <ImageView
         android:id="@+id/forumpost_backButton"
         android:layout_width="60dp"
         android:layout_height="35dp"
         android:layout_marginStart="19dp"
         android:layout_marginTop="20dp"
+        android:clickable="true"
         android:src="@drawable/baseline_west_24" />
 
     <TextView
@@ -85,4 +87,5 @@
         android:background="@drawable/accountplaintext_background"
         android:textColor="@color/white"
         android:text="Send" />
+
 </LinearLayout>

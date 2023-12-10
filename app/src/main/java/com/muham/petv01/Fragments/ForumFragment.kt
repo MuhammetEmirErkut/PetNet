@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.muham.petv01.Adapters.ForumPostRecyclerViewAdapter
@@ -22,6 +24,7 @@ import com.muham.petv01.Inheritance.Comment
 import com.muham.petv01.Inheritance.ItemForPost
 import com.muham.petv01.R
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 
@@ -34,6 +37,9 @@ class ForumFragment : Fragment() {
     private lateinit var forumRecyclerView: RecyclerView
     private lateinit var forumPostRecyclerViewAdapter: ForumPostRecyclerViewAdapter
     private lateinit var itemList: MutableList<ItemForPost>
+
+    private lateinit var searchImageView: ImageView
+    private lateinit var searchEditText: EditText
 
     private val likedPostIds = mutableSetOf<String>()
 
@@ -66,6 +72,9 @@ class ForumFragment : Fragment() {
         forumPostRecyclerViewAdapter = ForumPostRecyclerViewAdapter(itemList)
         forumRecyclerView.adapter = forumPostRecyclerViewAdapter
         forumRecyclerView.layoutManager = LinearLayoutManager(activity)
+
+        searchImageView = view.findViewById(R.id.searchImageView)
+        searchEditText = view.findViewById(R.id.searchEditText)
 
 
         auth = FirebaseAuth.getInstance()
@@ -100,8 +109,106 @@ class ForumFragment : Fragment() {
                 .commit()
         }
 
+
+        //search
+
+        searchImageView.setOnClickListener {
+            val searhText = searchEditText.text.toString()
+            performSearch(searhText)
+        }
+
         // Inflate the layout for this fragment
         return view
+    }
+
+    private fun performSearch(searchText: String) {
+        // İki sorgunun sonuçlarını birleştirmek için HashSet kullan
+        val uniqueItems = HashSet<ItemForPost>()
+
+        // Query for documents where the title contains the search text
+        val titleQuery = db.collection("forum")
+            .whereGreaterThanOrEqualTo("title", searchText)
+            .whereLessThanOrEqualTo("title", searchText + "\uf8ff") // Unicode karakter sıralama sorunları için
+            .orderBy("title") // Order by title to ensure consistent ordering for title matches
+
+        titleQuery.get()
+            .addOnSuccessListener { titleMatches ->
+                // Add title matches to the uniqueItems set
+                for (document in titleMatches) {
+                    val item = createItemFromDocument(document)
+                    uniqueItems.add(item)
+                }
+
+                // Continue the search for content
+                searchForContent(searchText, uniqueItems)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("ForumFragment", "Error getting title documents: ", exception)
+            }
+    }
+
+    private fun searchForContent(searchText: String, uniqueItems: HashSet<ItemForPost>) {
+        // Query for documents where the content contains the search text
+        val contentQuery = db.collection("forum")
+            .whereGreaterThanOrEqualTo("content", searchText)
+            .whereLessThanOrEqualTo("content", searchText + "\uf8ff") // Unicode karakter sıralama sorunları için
+            .orderBy("content") // Order by content to ensure consistent ordering for content matches
+
+        contentQuery.get()
+            .addOnSuccessListener { contentMatches ->
+                // Add content matches to the uniqueItems set
+                for (document in contentMatches) {
+                    val item = createItemFromDocument(document)
+                    uniqueItems.add(item)
+                }
+
+                // Convert the HashSet to a List for consistent ordering
+                val itemList = uniqueItems.toList()
+
+                // Update the RecyclerView
+                updateRecyclerView(itemList)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("ForumFragment", "Error getting content documents: ", exception)
+            }
+    }
+
+    private fun createItemFromDocument(document: QueryDocumentSnapshot): ItemForPost {
+        val title = document.getString("title") ?: ""
+        val content = document.getString("content") ?: ""
+        val userName = document.getString("username") ?: ""
+        val timestamp = document.getTimestamp("timestamp")
+        val time = if (timestamp != null) {
+            val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            sdf.format(timestamp.toDate())
+        } else {
+            ""
+        }
+
+        // Firestore'dan çekilen likes listesini kontrol et
+        val likesList = document.get("likes") as? List<String> ?: emptyList()
+        val likedByCurrentUser = auth.currentUser?.uid in likesList
+
+        // Like sayısını likes listesinin eleman sayısı olarak ayarla
+        val likeCount = likesList.size
+
+        return ItemForPost("null", userName, time, title, content, document.id, likeCount, likedByCurrentUser)
+    }
+
+    private fun updateRecyclerView(itemList: List<ItemForPost>) {
+        // Clear the existing itemList
+        this.itemList.clear()
+
+        // Add items to the itemList
+        this.itemList.addAll(itemList)
+
+        // Sort the itemList by timestamp in descending order
+        this.itemList.sortByDescending { item ->
+            SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).parse(item.time)
+        }
+
+        // Notify the adapter of the change
+        forumPostRecyclerViewAdapter.notifyDataSetChanged()
     }
     private fun refreshForumData() {
         val addedDocumentIds = mutableListOf<String>()
@@ -121,9 +228,10 @@ class ForumFragment : Fragment() {
 
                     // Eğer bu belge daha önce eklenmişse, geç
                     if (addedDocumentIds.contains(documentId)) {
-                        // Update like count for existing items in itemList
+                        // Update like count and likedByCurrentUser for existing items in itemList
                         val existingItem = itemList.find { it.documentId == documentId }
                         existingItem?.like = (document.get("likes") as? List<String> ?: emptyList()).size
+                        existingItem?.likedByCurrentUser = auth.currentUser?.uid in (document.get("likes") as? List<String> ?: emptyList())
                         continue
                     }
 
@@ -140,18 +248,44 @@ class ForumFragment : Fragment() {
                     }
                     val likesList = document.get("likes") as? List<String> ?: emptyList()
                     val likeCount = likesList.size
+                    val likedByCurrentUser = auth.currentUser?.uid in likesList
 
                     // Belge kimliğini kullanarak yeni bir ItemForPost nesnesi oluştur
-                    val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, false)
+                    val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser)
 
-                    itemList.add(0, item)
+                    // Yeni belge eklenmeden önce, listeden sil
+                    val removedIndex = itemList.indexOfFirst { it.documentId == documentId }
+                    if (removedIndex != -1) {
+                        itemList.removeAt(removedIndex)
+                    }
+
+                    // Yeni belgeyi listeye ekle
+                    itemList.add(item)
                 }
+
+                // Silinen belgeleri kontrol et
+                val removedDocumentIds = addedDocumentIds - documents.map { it.id }
+                for (removedDocumentId in removedDocumentIds) {
+                    val removedIndex = itemList.indexOfFirst { it.documentId == removedDocumentId }
+                    if (removedIndex != -1) {
+                        itemList.removeAt(removedIndex)
+                    }
+                }
+
+                // Yeni sıralama kriterine göre itemList'i sırala
+                itemList.sortByDescending { getDateFromDateString(it.time) }
+
                 // Adaptera değişikliği bildir
                 forumPostRecyclerViewAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 Log.w("ForumFragment", "Error getting documents: ", exception)
             }
+    }
+
+    private fun getDateFromDateString(dateString: String): Date {
+        val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        return sdf.parse(dateString) ?: Date()
     }
 
     private fun loadForumData() {
