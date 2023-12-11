@@ -109,14 +109,14 @@ class ForumPostFragment : Fragment() {
                     Log.w(TAG, "Error getting user document", e)
                 }
 
-            forumPostBackButton.setOnClickListener {
-                Log.d(TAG, "forumPostBackButton clicked")
-                parentFragmentManager.popBackStack()
-            }
+
 
         }
 
-
+        forumPostBackButton.setOnClickListener {
+            Log.d(TAG, "forumPostBackButton clicked")
+            parentFragmentManager.popBackStack()
+        }
         return view
     }
 

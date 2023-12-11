@@ -122,77 +122,43 @@ class ForumFragment : Fragment() {
     }
 
     private fun performSearch(searchText: String) {
-        // İki sorgunun sonuçlarını birleştirmek için HashSet kullan
-        val uniqueItems = HashSet<ItemForPost>()
+        val resultItems = mutableListOf<ItemForPost>()
 
-        // Query for documents where the title contains the search text
-        val titleQuery = db.collection("forum")
-            .whereGreaterThanOrEqualTo("title", searchText)
-            .whereLessThanOrEqualTo("title", searchText + "\uf8ff") // Unicode karakter sıralama sorunları için
-            .orderBy("title") // Order by title to ensure consistent ordering for title matches
+        // Firestore koleksiyonundan verileri çek
+        db.collection("forum")
+            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Yeniden eskiye doğru sırala
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val title = document.getString("title")?.toLowerCase(Locale.getDefault()) ?: ""
+                    val content = document.getString("content")?.toLowerCase(Locale.getDefault()) ?: ""
 
-        titleQuery.get()
-            .addOnSuccessListener { titleMatches ->
-                // Add title matches to the uniqueItems set
-                for (document in titleMatches) {
-                    val item = createItemFromDocument(document)
-                    uniqueItems.add(item)
+                    // Başlıkta veya içerikte arama yap
+                    if (title.contains(searchText.toLowerCase(Locale.getDefault())) || content.contains(searchText.toLowerCase(Locale.getDefault()))) {
+                        val documentId = document.id
+                        val userName = document.getString("username") ?: ""
+                        val timestamp = document.getTimestamp("timestamp")
+                        val time = if (timestamp != null) {
+                            val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                            sdf.format(timestamp.toDate())
+                        } else {
+                            ""
+                        }
+                        val likesList = document.get("likes") as? List<String> ?: emptyList()
+                        val likeCount = likesList.size
+                        val likedByCurrentUser = auth.currentUser?.uid in likesList
+
+                        val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser)
+                        resultItems.add(item)
+                    }
                 }
 
-                // Continue the search for content
-                searchForContent(searchText, uniqueItems)
+                // Güncellenmiş sonuçları RecyclerView'a yükle
+                updateRecyclerView(resultItems)
             }
             .addOnFailureListener { exception ->
-                Log.w("ForumFragment", "Error getting title documents: ", exception)
+                Log.w("ForumFragment", "Error getting documents: ", exception)
             }
-    }
-
-    private fun searchForContent(searchText: String, uniqueItems: HashSet<ItemForPost>) {
-        // Query for documents where the content contains the search text
-        val contentQuery = db.collection("forum")
-            .whereGreaterThanOrEqualTo("content", searchText)
-            .whereLessThanOrEqualTo("content", searchText + "\uf8ff") // Unicode karakter sıralama sorunları için
-            .orderBy("content") // Order by content to ensure consistent ordering for content matches
-
-        contentQuery.get()
-            .addOnSuccessListener { contentMatches ->
-                // Add content matches to the uniqueItems set
-                for (document in contentMatches) {
-                    val item = createItemFromDocument(document)
-                    uniqueItems.add(item)
-                }
-
-                // Convert the HashSet to a List for consistent ordering
-                val itemList = uniqueItems.toList()
-
-                // Update the RecyclerView
-                updateRecyclerView(itemList)
-            }
-            .addOnFailureListener { exception ->
-                Log.w("ForumFragment", "Error getting content documents: ", exception)
-            }
-    }
-
-    private fun createItemFromDocument(document: QueryDocumentSnapshot): ItemForPost {
-        val title = document.getString("title") ?: ""
-        val content = document.getString("content") ?: ""
-        val userName = document.getString("username") ?: ""
-        val timestamp = document.getTimestamp("timestamp")
-        val time = if (timestamp != null) {
-            val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-            sdf.format(timestamp.toDate())
-        } else {
-            ""
-        }
-
-        // Firestore'dan çekilen likes listesini kontrol et
-        val likesList = document.get("likes") as? List<String> ?: emptyList()
-        val likedByCurrentUser = auth.currentUser?.uid in likesList
-
-        // Like sayısını likes listesinin eleman sayısı olarak ayarla
-        val likeCount = likesList.size
-
-        return ItemForPost("null", userName, time, title, content, document.id, likeCount, likedByCurrentUser)
     }
 
     private fun updateRecyclerView(itemList: List<ItemForPost>) {
