@@ -81,7 +81,7 @@
             android:background="@drawable/accountplaintext_background"
             android:ems="10"
             android:hint="Password"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:paddingStart="13dp"
             android:textColor="@color/bone_white"
             android:textColorHint="@color/bone_white" />

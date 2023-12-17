@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Outer shape with a solid color and rounded corners (for stroke) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#6A6A6A"></solid>
+        </shape>
+    </item>
+
+    <!-- Inner shape with a solid color and rounded corners (for content) -->
+    <item android:top="1dp" android:left="1dp" android:right="1dp" android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/backgroundsoft_color"></solid>
+
+            <!-- Add stroke to the inner shape -->
+            <stroke
+                android:width="2dp"
+                android:color="#FFEB3B"/> <!-- Change color as needed -->
+
+        </shape>
+    </item>
+
+</layer-list>

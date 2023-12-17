@@ -3,12 +3,155 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background_color"
     tools:context=".Fragments.AccountFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.muham.petv01.Components.RoundImageView
+                android:id="@+id/accountPpImageView"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_margin="20dp"
+                android:layout_weight="1"
+                android:src="@drawable/logo2" />
+
+            <LinearLayout
+                android:layout_width="195dp"
+                android:layout_height="match_parent"
+
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/firstNameLastNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="26dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/candal"
+                    android:text="FirstName LastName"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/accountPerkTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="40dp"
+                    android:layout_marginStart="11dp"
+                    android:gravity="center"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:background="@drawable/petfriend_perk_design"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:text="       Pet Friend      " />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/settingsImageView"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="43dp"
+                android:layout_marginTop="17dp"
+                android:layout_weight="1"
+                android:src="@drawable/baseline_menu_24" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/saveCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="00"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/saveCountUselessTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Posts Saved"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/postCountTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="21dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="00"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/postCountTUselessextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Posts Sended"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view9"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/view10"
+            android:layout_width="match_parent"
+            android:background="@color/backgrounddark_color"
+            android:layout_height="2dp" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/accountBottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_color"
+            android:backgroundTint="#ECECEC"
+            app:itemIconTint="@color/color_item_bottommainmenu"
+            app:itemTextColor="@color/color_item_bottommainmenu"
+            app:menu="@menu/menu_account">
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/accountViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginTop="13dp">
+
+        </androidx.viewpager2.widget.ViewPager2>
+
+    </LinearLayout>
 
 </FrameLayout>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgrounddark_color"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/view11"
+        android:layout_width="wrap_content"
+        android:layout_height="2dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="150dp"
+        android:background="@color/backgroundsoft_color"/>
+
+    <TextView
+        android:id="@+id/settingUselessTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Settings"
+        android:textColor="@color/white"
+        android:textSize="21sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginHorizontal="41dp"
+        android:background="@drawable/forumsearch_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/accountDetailtsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="11dp"
+            android:layout_marginTop="12dp"
+            android:text="Account Details"
+            android:textColor="@color/white"
+            android:textSize="17sp" />
+
+        <View
+            android:id="@+id/view12"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/bone_white"/>
+
+        <TextView
+            android:id="@+id/accountLogOutTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="11dp"
+            android:layout_marginTop="12dp"
+            android:text="Log Out'"
+            android:textColor="@color/red"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

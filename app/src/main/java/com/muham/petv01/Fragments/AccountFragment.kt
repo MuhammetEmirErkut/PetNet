@@ -5,6 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.fragment.app.FragmentManager
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.muham.petv01.Adapters.AccountFragmentPageAdapter
+import com.muham.petv01.Adapters.FragmentPageAdapter
+import com.muham.petv01.BottomSheets.AccountSettingBottomSheetFragment
 import com.muham.petv01.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -18,6 +27,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class AccountFragment : Fragment() {
+    private lateinit var accountViewPager: ViewPager2
+    private lateinit var accountBottomNavigationView: BottomNavigationView
+    private lateinit var accountFragmentPageAdapter: AccountFragmentPageAdapter
+    private lateinit var settingImageView: ImageView
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
@@ -34,9 +47,36 @@ class AccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false)
+        val view = inflater.inflate(R.layout.fragment_account, container, false)
+
+        accountViewPager = view.findViewById(R.id.accountViewPager)
+        accountBottomNavigationView = view.findViewById(R.id.accountBottomNavigationView)
+        accountFragmentPageAdapter = AccountFragmentPageAdapter(requireActivity().supportFragmentManager, lifecycle)
+        settingImageView = view.findViewById<ImageView>(R.id.settingsImageView)
+
+        accountBottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.itPet -> accountViewPager.currentItem = 0
+                R.id.itPost -> accountViewPager.currentItem = 1
+                R.id.itSave -> accountViewPager.currentItem = 2
+
+            }
+            true
+        }
+
+        accountViewPager.adapter = accountFragmentPageAdapter
+
+        settingImageView.setOnClickListener {
+            // AccountSettingBottomSheetFragment objesini oluştur
+            val accountSettingBottomSheetFragment = AccountSettingBottomSheetFragment()
+
+            // Alt sayfayı göster
+            accountSettingBottomSheetFragment.show(parentFragmentManager, accountSettingBottomSheetFragment.tag)
+        }
+
+        return view
     }
+
 
     companion object {
         /**

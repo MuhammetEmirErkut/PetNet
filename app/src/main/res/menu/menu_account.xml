@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/itPet"
+        android:icon="@drawable/itaccount"
+        android:title="Pets"
+        app:showAsAction="ifRoom"></item>
+    <item
+        android:id="@+id/itPost"
+        android:title="Posts"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/itforum"></item>
+    <item
+        android:id="@+id/itSave"
+        android:title="Saved Post"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/itensyclopedia"></item>
+</menu>
