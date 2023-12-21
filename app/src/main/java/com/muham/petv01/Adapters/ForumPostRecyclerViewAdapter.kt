@@ -1,6 +1,7 @@
 package com.muham.petv01.Adapters
 
 import android.content.ContentValues.TAG
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
         val postContentTextView: TextView = itemView.findViewById(R.id.postContentTextView)
         val likeNumberTextView: TextView = itemView.findViewById(R.id.likeNumberTextView)
         val likePostButton: ImageView = itemView.findViewById(R.id.likePostButton)
+        val savePostImageView: ImageView = itemView.findViewById(R.id.savePostImageView)
         val commentPostImageView: ImageView = itemView.findViewById(R.id.commentPostImageView)
         val commentNumberTextView: TextView = itemView.findViewById(R.id.commentNumberTextView)
         val postMoreImageView: ImageView = itemView.findViewById(R.id.postMoreImageView)
@@ -68,6 +70,10 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
             if (currentItem.likedByCurrentUser) R.drawable.likeapost else R.drawable.likepost
         )
 
+        holder.savePostImageView.setImageResource(
+            if (currentItem.savedByCurrentUser) R.drawable.saveonn else R.drawable.postsave
+        )
+
         holder.likePostButton.setOnClickListener {
             // Get the ID of the current post
             val postId = currentItem.documentId
@@ -87,6 +93,26 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
 
                 // Remove the current user's ID from the likes list in Firestore
                 unlikePost(postId, holder.auth, holder.likeNumberTextView)
+            }
+        }
+
+        //Save Post Button
+
+        holder.savePostImageView.setOnClickListener {
+            val postId = currentItem.documentId
+
+            if (!currentItem.savedByCurrentUser){
+
+                holder.savePostImageView.setImageResource(R.drawable.saveonn)
+                currentItem.savedByCurrentUser = true
+
+                savePost(postId, holder.auth)
+            } else{
+
+                holder.savePostImageView.setImageResource(R.drawable.postsave)
+                currentItem.savedByCurrentUser = false
+
+                unSavePost(postId, holder.auth)
             }
         }
 
@@ -152,7 +178,31 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
             }
     }
 
+    private fun savePost(postId: String, auth: FirebaseAuth) {
+        val postReference = Firebase.firestore.collection("forum").document(postId)
 
+        // Update the "likes" field by adding the current user's ID
+        postReference.update("saves", FieldValue.arrayUnion(auth.currentUser?.uid))
+            .addOnSuccessListener {
+                Log.d(TAG, "Post saved successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error saving post", e)
+            }
+    }
+
+    private fun unSavePost(postId: String, auth: FirebaseAuth) {
+        val postReference = Firebase.firestore.collection("forum").document(postId)
+
+        // Update the "likes" field by removing the current user's ID
+        postReference.update("saves", FieldValue.arrayRemove(auth.currentUser?.uid))
+            .addOnSuccessListener {
+                Log.d(TAG, "Post unsaved successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error unsaving post", e)
+            }
+    }
 
     private fun likePost(postId: String, auth: FirebaseAuth, likeNumberTextView: TextView) {
         val postReference = Firebase.firestore.collection("forum").document(postId)

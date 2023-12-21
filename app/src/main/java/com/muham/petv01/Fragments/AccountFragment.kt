@@ -31,6 +31,7 @@ class AccountFragment : Fragment() {
     private lateinit var accountBottomNavigationView: BottomNavigationView
     private lateinit var accountFragmentPageAdapter: AccountFragmentPageAdapter
     private lateinit var settingImageView: ImageView
+
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null

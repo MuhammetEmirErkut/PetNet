@@ -9,10 +9,11 @@ data class ItemForPost(
     val documentId: String,
     var like: Int,
     var likedByCurrentUser: Boolean,
+    var savedByCurrentUser: Boolean,
     var comments: List<Comment> = mutableListOf()
 ) {
     // Boş argüman yapıcısı
-    constructor() : this("", "", "", "", "", "", 0, false, mutableListOf())
+    constructor() : this("", "", "", "", "", "", 0, false, false, mutableListOf())
 }
 
 data class Comment(

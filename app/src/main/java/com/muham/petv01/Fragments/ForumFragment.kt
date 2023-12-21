@@ -148,7 +148,10 @@ class ForumFragment : Fragment() {
                         val likeCount = likesList.size
                         val likedByCurrentUser = auth.currentUser?.uid in likesList
 
-                        val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser)
+                        val savesList = document.get("saves") as? List<String> ?: emptyList()
+                        val savedByCurrentUser = auth.currentUser?.uid in savesList
+
+                        val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
                         resultItems.add(item)
                     }
                 }
@@ -216,8 +219,10 @@ class ForumFragment : Fragment() {
                     val likeCount = likesList.size
                     val likedByCurrentUser = auth.currentUser?.uid in likesList
 
-                    // Belge kimliğini kullanarak yeni bir ItemForPost nesnesi oluştur
-                    val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser)
+                    val savesList = document.get("saves") as? List<String> ?: emptyList()
+                    val savedByCurrentUser = auth.currentUser?.uid in savesList
+
+                    val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
 
                     // Yeni belge eklenmeden önce, listeden sil
                     val removedIndex = itemList.indexOfFirst { it.documentId == documentId }
@@ -280,8 +285,10 @@ class ForumFragment : Fragment() {
 
                     // Like sayısını likes listesinin eleman sayısı olarak ayarla
                     val likeCount = likesList.size
+                    val savesList = document.get("saves") as? List<String> ?: emptyList()
+                    val savedByCurrentUser = auth.currentUser?.uid in savesList
 
-                    val item = ItemForPost("null", userName, time, title, content, documnetId, likeCount, likedByCurrentUser)
+                    val item = ItemForPost("null", userName, time, title, content, documnetId, likeCount, likedByCurrentUser ,savedByCurrentUser)
                     itemList.add(item)
                 }
                 // Adaptera değişikliği bildir

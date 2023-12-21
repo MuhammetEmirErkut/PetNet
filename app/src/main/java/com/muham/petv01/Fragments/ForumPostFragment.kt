@@ -91,7 +91,8 @@ class ForumPostFragment : Fragment() {
                             "author" to auth.currentUser?.uid,
                             "username" to username, // Include the username in the post
                             "timestamp" to FieldValue.serverTimestamp(),
-                            "likes" to arrayListOf<String>()
+                            "likes" to arrayListOf<String>(),
+                            "saves" to arrayListOf<String>()
                         )
 
                         // Add the new post to the 'forum' collection
