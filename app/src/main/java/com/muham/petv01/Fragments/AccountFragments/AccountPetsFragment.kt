@@ -1,60 +1,92 @@
 package com.muham.petv01.Fragments.AccountFragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.muham.petv01.Accounts.Persons
+import com.muham.petv01.Accounts.Pets
+import com.muham.petv01.Adapters.AccountPetsRecyclerViewAdapter
 import com.muham.petv01.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AccountPetsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AccountPetsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: AccountPetsRecyclerViewAdapter
+    private val db = FirebaseFirestore.getInstance()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var accountPetsSwipeRefreshLayout: SwipeRefreshLayout
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account_pets, container, false)
+        val view = inflater.inflate(R.layout.fragment_account_pets, container, false)
+
+        recyclerView = view.findViewById(R.id.petsRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        accountPetsSwipeRefreshLayout = view.findViewById(R.id.accountPetsSwipeRefreshLayout)
+
+        accountPetsSwipeRefreshLayout.setOnRefreshListener {
+            fetchPetsFromFirebase()
+
+            accountPetsSwipeRefreshLayout.isRefreshing = false
+        }
+
+        fetchPetsFromFirebase()
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AccountPetsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AccountPetsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchPetsFromFirebase() {
+        val userId = auth.currentUser?.uid
+
+        if (userId != null) {
+            val userReference = Firebase.firestore.collection("Persons").document(userId)
+
+            // Firestore'da değişiklik olduğunda tetiklenecek listener
+            userReference.addSnapshotListener { userDocumentSnapshot, error ->
+                if (error != null) {
+                    Log.e("AccountPetsFragment", "Error getting pets", error)
+                    return@addSnapshotListener
+                }
+
+                if (userDocumentSnapshot != null && userDocumentSnapshot.exists()) {
+                    val person = userDocumentSnapshot.toObject(Persons::class.java)
+                    val pets = person?.pets ?: emptyList()
+
+                    // Yeni veri geldiğinde RecyclerView'e güncelleme
+                    updateRecyclerView(pets)
                 }
             }
+        }
     }
+
+
+    private fun updateRecyclerView(pets: List<Pets>) {
+        val petsRecyclerView = view?.findViewById<RecyclerView>(R.id.petsRecyclerView)
+
+        // Do not forget to pass context to the adapter
+        val petsAdapter = AccountPetsRecyclerViewAdapter(requireContext(), pets)
+
+        val petsLayoutManager = LinearLayoutManager(context)
+
+        petsRecyclerView?.adapter = petsAdapter
+        petsRecyclerView?.layoutManager = petsLayoutManager
+
+        // Notify the adapter that the data has changed
+        petsAdapter.notifyDataSetChanged()
+    }
+
+
 }
+

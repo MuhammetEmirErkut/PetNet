@@ -51,8 +51,7 @@ class MainActivity : AppCompatActivity() {
                 when (item.itemId) {
                     R.id.itHome -> mainViewPager2.currentItem = 0
                     R.id.itForum -> mainViewPager2.currentItem = 1
-                    R.id.itEnsyclopedia -> mainViewPager2.currentItem = 2
-                    R.id.itAccount -> mainViewPager2.currentItem = 3
+                    R.id.itAccount -> mainViewPager2.currentItem = 2
                 }
                 true
             }
@@ -65,8 +64,7 @@ class MainActivity : AppCompatActivity() {
                     when (position) {
                         0 -> bottomNavigationView.selectedItemId = R.id.itHome
                         1 -> bottomNavigationView.selectedItemId = R.id.itForum
-                        2 -> bottomNavigationView.selectedItemId = R.id.itEnsyclopedia
-                        3 -> bottomNavigationView.selectedItemId = R.id.itAccount
+                        2 -> bottomNavigationView.selectedItemId = R.id.itAccount
                     }
                 }
             })

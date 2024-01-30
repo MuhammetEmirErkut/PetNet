@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.muham.petv01.Adapters.ForumPostRecyclerViewAdapter
@@ -34,6 +35,8 @@ class AccountSavedFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
 
+    private lateinit var accountSavedSwipeRefreshLayout: SwipeRefreshLayout
+
     private var param1: String? = null
     private var param2: String? = null
 
@@ -57,6 +60,7 @@ class AccountSavedFragment : Fragment() {
         postList = mutableListOf()
 
         accountSavedRecyclerView = view.findViewById(R.id.accountSavedRecyclerView)
+        accountSavedSwipeRefreshLayout = view.findViewById(R.id.accountSavedSwipeRepresh)
         accountPostsRecyclerViewAdapter = ForumPostRecyclerViewAdapter(postList)
         accountSavedRecyclerView.adapter = accountPostsRecyclerViewAdapter
         accountSavedRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -64,10 +68,74 @@ class AccountSavedFragment : Fragment() {
         // Kullanıcının kendi UID'sini al
         val currentUserUid = auth.currentUser?.uid
 
+        accountSavedSwipeRefreshLayout.setOnRefreshListener {
+            refreshFromData(currentUserUid)
+            accountSavedSwipeRefreshLayout.isRefreshing = false
+        }
+
         // Kullanıcının UID'sini kullanarak kendi postlarını getir
         loadAccountSaved(currentUserUid)
 
         return view
+    }
+
+    private fun refreshFromData(currentUserUid: String?) {
+
+        val addedDocumentIds = mutableListOf<String>()
+
+        // Daha önce eklenmiş belgelerin kimliklerini al
+        for (item in postList) {
+            addedDocumentIds.add(item.documentId)
+        }
+
+        if (currentUserUid != null) {
+            db.collection("forum")
+                .whereArrayContains("saves", currentUserUid)
+                .get()
+                .addOnSuccessListener { documents ->
+
+                    postList.clear()
+
+                    for (document in documents) {
+                        val title = document.getString("title") ?: ""
+                        val content = document.getString("content") ?: ""
+                        val userName = document.getString("username") ?: ""
+                        val documentId = document.id
+                        val timestamp = document.getTimestamp("timestamp")
+                        val time = if (timestamp != null) {
+                            val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+                            sdf.format(timestamp.toDate())
+                        } else {
+                            ""
+                        }
+                        val likesList = document.get("likes") as? List<String> ?: emptyList()
+                        val likeCount = likesList.size
+                        val likedByCurrentUser = auth.currentUser?.uid in likesList
+
+                        val savesList = document.get("saves") as? List<String> ?: emptyList()
+                        val savedByCurrentUser = auth.currentUser?.uid in savesList
+
+                        val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
+                        postList.add(item)
+                    }
+
+                    val removedDocumentIds = addedDocumentIds - documents.map { it.id }
+                    for (removedDocumentId in removedDocumentIds) {
+                        val removedIndex = postList.indexOfFirst { it.documentId == removedDocumentId }
+                        if (removedIndex != -1) {
+                            postList.removeAt(removedIndex)
+                        }
+                    }
+                    // Yeni sıralama kriterine göre itemList'i sırala
+                    //postList.sortByDescending { getDateFromDateString(it.time) }
+
+                    // Adaptera değişikliği bildir
+                    accountPostsRecyclerViewAdapter.notifyDataSetChanged()
+                }
+                .addOnFailureListener { exception ->
+                    Log.w("AccountPostsFragment", "Error getting documents: ", exception)
+                }
+        }
     }
 
     private fun loadAccountSaved(currentUserUid: String?) {

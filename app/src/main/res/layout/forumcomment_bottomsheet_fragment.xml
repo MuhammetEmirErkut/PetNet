@@ -37,7 +37,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="430dp" />
+        android:layout_height="410dp" />
 
     <View
         android:id="@+id/view4"

@@ -37,6 +37,7 @@ android {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:latest_version")
     implementation("com.google.android.material:material:1.10.0")
     implementation("com.google.firebase:firebase-firestore-ktx:23.0.3")
     implementation("com.google.firebase:firebase-auth:21.0.1")

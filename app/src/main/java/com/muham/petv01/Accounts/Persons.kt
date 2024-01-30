@@ -5,7 +5,8 @@ class Persons(
     private val firstName: String,
     private val lastName: String,
     private val password: String,
-    private val email: String
+    private val email: String,
+    val pets: List<Pets> = mutableListOf()
 ) {
 
     fun getUid(): String {
@@ -27,4 +28,16 @@ class Persons(
     fun getEmail(): String {
         return email
     }
+
+    constructor() : this("", "", "", "", "", mutableListOf())
 }
+data class Pets(
+    val age: String,
+    val name: String,
+    val type: String,
+    val id: String
+) {
+    // Boş argüman yapıcısı
+    constructor() : this("", "", "","")
+}
+

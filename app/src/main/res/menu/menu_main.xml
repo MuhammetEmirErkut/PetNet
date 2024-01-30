@@ -12,11 +12,6 @@
         app:showAsAction="ifRoom"
         android:icon="@drawable/itforum"></item>
     <item
-        android:id="@+id/itEnsyclopedia"
-        android:title="Ensyclopedia"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/itensyclopedia"></item>
-    <item
         android:id="@+id/itAccount"
         android:title="Account"
         app:showAsAction="ifRoom"
