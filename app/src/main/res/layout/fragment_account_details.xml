@@ -3,12 +3,133 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgrounddark_color"
     tools:context=".Fragments.AccountFragments.AccountDetailsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/accountdetails_back_button"
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:src="@drawable/baseline_west_24" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:gravity="center"
+                android:paddingEnd="36dp"
+                android:text="Account Details"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.muham.petv01.Components.RoundImageView
+                android:id="@+id/userPhotoImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/dog"></com.muham.petv01.Components.RoundImageView>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/userPhotoChangeSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="26dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="59dp"
+                android:paddingStart="9dp"
+                android:ems="10"
+                android:background="@drawable/forumsearch_background"
+                android:completionThreshold="1"
+                ></androidx.appcompat.widget.AppCompatSpinner>
+        </LinearLayout>
+        <EditText
+            android:id="@+id/editNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/accountplaintext_background"
+            android:ems="10"
+            android:hint="Name"
+            android:inputType="text"
+            android:paddingStart="13dp"
+            android:textColor="@color/bone_white"
+            android:textColorHint="@color/bone_white" />
+
+        <EditText
+            android:id="@+id/editSurnameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/accountplaintext_background"
+            android:ems="10"
+            android:hint="Surname"
+            android:inputType="text"
+            android:paddingStart="13dp"
+            android:textColor="@color/bone_white"
+            android:textColorHint="@color/bone_white" />
+
+        <EditText
+            android:id="@+id/editEmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/accountplaintext_background"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="text"
+            android:paddingStart="13dp"
+            android:textColor="@color/bone_white"
+            android:textColorHint="@color/bone_white" />
+
+        <EditText
+            android:id="@+id/editPasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/accountplaintext_background"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingStart="13dp"
+            android:textColor="@color/bone_white"
+            android:textColorHint="@color/bone_white" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/updateProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="110dp"
+            android:layout_marginEnd="30dp"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:background="@color/backgrounddark_color"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
 </FrameLayout>

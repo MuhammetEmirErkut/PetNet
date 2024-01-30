@@ -20,10 +20,11 @@
             android:orientation="horizontal">
 
             <com.muham.petv01.Components.RoundImageView
-                android:id="@+id/accountPpImageView"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="20dp"
+                android:id="@+id/accountUserPhotoImageView"
+                android:layout_width="110dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="40dp"
                 android:layout_weight="1"
                 android:src="@drawable/logo2" />
 
@@ -37,7 +38,7 @@
                     android:id="@+id/firstNameLastNameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="22dp"
                     android:layout_marginTop="26dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/candal"
@@ -50,7 +51,7 @@
                     android:layout_width="97dp"
                     android:layout_height="30dp"
                     android:layout_gravity="start"
-                    android:layout_marginStart="9dp"
+                    android:layout_marginStart="22dp"
                     android:layout_marginBottom="20dp"
                     android:layout_weight="1"
                     android:background="@drawable/petadd_buttondesign"
@@ -63,8 +64,8 @@
 
             <ImageView
                 android:id="@+id/settingsImageView"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginStart="43dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="17dp"

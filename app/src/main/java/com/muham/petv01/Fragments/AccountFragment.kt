@@ -1,6 +1,7 @@
 package com.muham.petv01.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.muham.petv01.Adapters.AccountFragmentPageAdapter
 import com.muham.petv01.BottomSheets.AccountSettingBottomSheetFragment
+import com.muham.petv01.Components.RoundImageView
 import com.muham.petv01.Fragments.AccountFragments.AccountPetAddFragment
 import com.muham.petv01.R
 
@@ -27,6 +29,7 @@ class AccountFragment : Fragment() {
     private lateinit var settingImageView: ImageView
     private lateinit var accountPetAddTextView: TextView
     private lateinit var usernameTextView: TextView  // Ekledim
+    private lateinit var accountUserPhotoImageView: RoundImageView
 
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firebaseFirestore = FirebaseFirestore.getInstance()
@@ -53,6 +56,7 @@ class AccountFragment : Fragment() {
         accountFragmentPageAdapter = AccountFragmentPageAdapter(requireActivity().supportFragmentManager, lifecycle)
         settingImageView = view.findViewById(R.id.settingsImageView)
         accountPetAddTextView = view.findViewById(R.id.accountPetAddTextView)
+        accountUserPhotoImageView = view.findViewById(R.id.accountUserPhotoImageView)
         usernameTextView = view.findViewById(R.id.firstNameLastNameTextView)  // Ekledim
 
         accountBottomNavigationView.setOnNavigationItemSelectedListener { item ->
@@ -87,15 +91,25 @@ class AccountFragment : Fragment() {
     private fun fetchUserData() {
         val userId = firebaseAuth.currentUser?.uid
 
-        if (userId != null) {
-            firebaseFirestore.collection("Persons").document(userId)
+        userId?.let { uid ->
+            firebaseFirestore.collection("Persons").document(uid)
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
                     if (documentSnapshot.exists()) {
+                        val userPhoto = documentSnapshot.getString("userPhoto") ?: ""
+                        Log.d("AccountFragment", "userPhoto: $userPhoto")
                         val firstName = documentSnapshot.getString("firstName") ?: ""
                         val lastName = documentSnapshot.getString("lastName") ?: ""
                         val fullName = "$firstName $lastName"
                         usernameTextView.text = fullName
+
+                        val drawableResId = when (userPhoto) {
+                            "Bird" -> R.drawable.bird
+                            "Dog" -> R.drawable.dog
+                            "Cat" -> R.drawable.cat
+                            else -> R.drawable.logo
+                        }
+                        accountUserPhotoImageView.setImageResource(drawableResId)
                     }
                 }
                 .addOnFailureListener { e ->

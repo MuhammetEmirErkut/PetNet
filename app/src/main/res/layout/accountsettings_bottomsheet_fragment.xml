@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_bottomsheet_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgrounddark_color"
@@ -9,9 +10,9 @@
         android:id="@+id/view11"
         android:layout_width="wrap_content"
         android:layout_height="2dp"
-        android:layout_marginTop="15dp"
         android:layout_marginHorizontal="150dp"
-        android:background="@color/backgroundsoft_color"/>
+        android:layout_marginTop="15dp"
+        android:background="@color/backgroundsoft_color" />
 
     <TextView
         android:id="@+id/settingUselessTextView"
@@ -27,9 +28,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="41dp"
         android:layout_marginTop="29dp"
         android:layout_marginBottom="30dp"
-        android:layout_marginHorizontal="41dp"
         android:background="@drawable/forumsearch_background"
         android:orientation="vertical">
 
@@ -48,10 +49,10 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginTop="12dp"
-            android:background="@color/bone_white"/>
+            android:background="@color/bone_white" />
 
         <TextView
-            android:id="@+id/RulesTextView"
+            android:id="@+id/rulesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="11dp"
@@ -65,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginTop="12dp"
-            android:background="@color/bone_white"/>
+            android:background="@color/bone_white" />
 
         <TextView
             android:id="@+id/accountLogOutTextView"
