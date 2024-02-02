@@ -5,10 +5,275 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="35dp"
+                    android:background="@drawable/whiteradius_background"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="35dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/petpoint"></ImageView>
+
+                    <TextView
+                        android:id="@+id/petPointTextView"
+                        android:layout_width="38dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:text="01234"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="26dp"
+                    android:layout_marginEnd="25dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="90dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/leaderboard" />
+
+                    <TextView
+                        android:id="@+id/textView31"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-condensed-medium"
+                        android:text="Leaderboard"
+                        android:textColor="@color/white"
+                        android:textSize="24sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="25dp"
+                android:background="@drawable/whiteradius_background"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/giftImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="63dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/hoursgift" />
+
+                <TextView
+                    android:id="@+id/timerTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="sans-serif-condensed-medium"
+                    android:gravity="center"
+                    android:text="aSDAS"
+                    android:textColor="@color/black"
+                    android:textSize="23sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/petadd_buttondesign"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/uselessTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="1."
+                android:textSize="21sp" />
+            <TextView
+                android:id="@+id/leaderboardTextView1"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="Ceyhun Temiz"
+                android:textSize="21sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="horizontal"
+            android:background="@drawable/petfriend_perk_design">
+            <TextView
+                android:id="@+id/uselessTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="2."
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/leaderboardTextView2"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="Ceyhun Temiz"
+                android:textSize="21sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/petfriend_perk_design"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/uselessTextView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="3."
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/leaderboardTextView3"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="Ceyhun Temiz"
+                android:textSize="21sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="horizontal"
+            android:background="@drawable/petfriend_perk_design">
+
+            <TextView
+                android:id="@+id/uselessTextView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="4."
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/leaderboardTextView4"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="Ceyhun Temiz"
+                android:textSize="21sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginHorizontal="20dp"
+            android:orientation="horizontal"
+            android:background="@drawable/petfriend_perk_design">
+
+            <TextView
+                android:id="@+id/uselessTextView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="5."
+                android:textSize="21sp" />
+
+            <TextView
+                android:id="@+id/leaderboardTextView5"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:textColor="@color/black"
+                android:text="Ceyhun Temiz"
+                android:textSize="21sp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 </FrameLayout>

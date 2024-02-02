@@ -97,6 +97,7 @@ class AccountSavedFragment : Fragment() {
                     postList.clear()
 
                     for (document in documents) {
+                        val userPhoto = document.getString("userPhoto") ?: ""
                         val title = document.getString("title") ?: ""
                         val content = document.getString("content") ?: ""
                         val userName = document.getString("username") ?: ""
@@ -115,7 +116,7 @@ class AccountSavedFragment : Fragment() {
                         val savesList = document.get("saves") as? List<String> ?: emptyList()
                         val savedByCurrentUser = auth.currentUser?.uid in savesList
 
-                        val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
+                        val item = ItemForPost(userPhoto, userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
                         postList.add(item)
                     }
 
@@ -145,6 +146,7 @@ class AccountSavedFragment : Fragment() {
                 .get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
+                        val userPhoto = document.getString("userPhoto") ?: ""
                         val title = document.getString("title") ?: ""
                         val content = document.getString("content") ?: ""
                         val userName = document.getString("username") ?: ""
@@ -163,7 +165,7 @@ class AccountSavedFragment : Fragment() {
                         val savesList = document.get("saves") as? List<String> ?: emptyList()
                         val savedByCurrentUser = auth.currentUser?.uid in savesList
 
-                        val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
+                        val item = ItemForPost(userPhoto, userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
                         postList.add(item)
                     }
 

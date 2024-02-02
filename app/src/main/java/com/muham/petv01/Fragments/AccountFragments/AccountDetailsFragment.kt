@@ -155,14 +155,15 @@ class AccountDetailsFragment : Fragment() {
                     "userPhoto", userPhoto
                 )
                 .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Profil Güncellendi", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Profile Updated", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.popBackStack()
                 }
                 .addOnFailureListener {
-                    Toast.makeText(requireContext(), "Profil Güncelleme Başarısız", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Profile Update Failed", Toast.LENGTH_SHORT).show()
                 }
         } else {
             // Eksik veya hatalı bilgi durumunda kullanıcıyı bilgilendirin
-            Toast.makeText(requireContext(), "Bilgileri eksiksiz doldurun", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Fill in the information completely", Toast.LENGTH_SHORT).show()
         }
     }
     private fun updateImageViewBasedOnPetType(selectedPetType: String) {
