@@ -104,9 +104,10 @@ class AccountFragment : Fragment() {
                         usernameTextView.text = fullName
 
                         val drawableResId = when (userPhoto) {
-                            "Bird" -> R.drawable.bird
-                            "Dog" -> R.drawable.dog
-                            "Cat" -> R.drawable.cat
+                            "G1" -> R.drawable.g1char
+                            "B1" -> R.drawable.b1char
+                            "B2" -> R.drawable.b2char
+                            "G2" -> R.drawable.g2char
                             else -> R.drawable.logo
                         }
                         accountUserPhotoImageView.setImageResource(drawableResId)

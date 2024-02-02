@@ -83,7 +83,7 @@ class ForumPostFragment : Fragment() {
 
                         // Combine first name and last name to create a username
                         val username = "$firstName $lastName"
-
+                        val userPhoto = userSnapshot.getString("userPhoto") ?: ""
                         // Now, you can use the 'username' in your post
                         val newForumPost = hashMapOf(
                             "title" to title,
@@ -92,7 +92,8 @@ class ForumPostFragment : Fragment() {
                             "username" to username, // Include the username in the post
                             "timestamp" to FieldValue.serverTimestamp(),
                             "likes" to arrayListOf<String>(),
-                            "saves" to arrayListOf<String>()
+                            "saves" to arrayListOf<String>(),
+                            "userPhoto" to userPhoto
                         )
 
                         // Add the new post to the 'forum' collection

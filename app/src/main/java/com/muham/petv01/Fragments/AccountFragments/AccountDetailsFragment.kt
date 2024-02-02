@@ -107,7 +107,7 @@ class AccountDetailsFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        val suggestions = arrayOf("Bird", "Dog", "Cat")
+        val suggestions = arrayOf("G1", "B1", "B2", "G2")
 
         // ArrayAdapter'ı oluşturun ve AutoCompleteTextView'a bağlayın
         val adapter = ArrayAdapter(requireContext(), R.layout.spinner_selected_item, suggestions)
@@ -167,9 +167,10 @@ class AccountDetailsFragment : Fragment() {
     }
     private fun updateImageViewBasedOnPetType(selectedPetType: String) {
         when (selectedPetType) {
-            "Dog" -> userPhotoImageView.setImageResource(R.drawable.dog)
-            "Cat" -> userPhotoImageView.setImageResource(R.drawable.cat)
-            "Bird" -> userPhotoImageView.setImageResource(R.drawable.bird)
+            "B1" -> userPhotoImageView.setImageResource(R.drawable.b1char)
+            "B2" -> userPhotoImageView.setImageResource(R.drawable.b2char)
+            "G1" -> userPhotoImageView.setImageResource(R.drawable.g1char)
+            "G2" -> userPhotoImageView.setImageResource(R.drawable.g2char)
             // Diğer seçeneklere göre ekleyebilirsiniz
             else -> userPhotoImageView.setImageResource(R.drawable.dog)
         }

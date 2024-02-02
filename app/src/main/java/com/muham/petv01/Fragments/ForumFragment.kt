@@ -135,6 +135,7 @@ class ForumFragment : Fragment() {
 
                     // Başlıkta veya içerikte arama yap
                     if (title.contains(searchText.toLowerCase(Locale.getDefault())) || content.contains(searchText.toLowerCase(Locale.getDefault()))) {
+                        val userPhoto = document.getString("userPhoto") ?: ""
                         val documentId = document.id
                         val userName = document.getString("username") ?: ""
                         val timestamp = document.getTimestamp("timestamp")
@@ -151,7 +152,7 @@ class ForumFragment : Fragment() {
                         val savesList = document.get("saves") as? List<String> ?: emptyList()
                         val savedByCurrentUser = auth.currentUser?.uid in savesList
 
-                        val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
+                        val item = ItemForPost(userPhoto, userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
                         resultItems.add(item)
                     }
                 }
@@ -203,7 +204,7 @@ class ForumFragment : Fragment() {
                         existingItem?.likedByCurrentUser = auth.currentUser?.uid in (document.get("likes") as? List<String> ?: emptyList())
                         continue
                     }
-
+                    val userPhoto = document.getString("userPhoto") ?: ""
                     // Verileri al ve itemList'e ekle
                     val title = document.getString("title") ?: ""
                     val content = document.getString("content") ?: ""
@@ -222,7 +223,7 @@ class ForumFragment : Fragment() {
                     val savesList = document.get("saves") as? List<String> ?: emptyList()
                     val savedByCurrentUser = auth.currentUser?.uid in savesList
 
-                    val item = ItemForPost("null", userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
+                    val item = ItemForPost(userPhoto, userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
 
                     // Yeni belge eklenmeden önce, listeden sil
                     val removedIndex = itemList.indexOfFirst { it.documentId == documentId }
@@ -266,6 +267,7 @@ class ForumFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
+                    val userPhoto = document.getString("userPhoto") ?: ""
                     val documnetId = document.id
                     // Verileri al ve itemList'e ekle
                     val title = document.getString("title") ?: ""
@@ -288,7 +290,7 @@ class ForumFragment : Fragment() {
                     val savesList = document.get("saves") as? List<String> ?: emptyList()
                     val savedByCurrentUser = auth.currentUser?.uid in savesList
 
-                    val item = ItemForPost("null", userName, time, title, content, documnetId, likeCount, likedByCurrentUser ,savedByCurrentUser)
+                    val item = ItemForPost(userPhoto, userName, time, title, content, documnetId, likeCount, likedByCurrentUser ,savedByCurrentUser)
                     itemList.add(item)
                 }
                 // Adaptera değişikliği bildir

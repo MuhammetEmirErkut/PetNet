@@ -64,6 +64,19 @@ class ForumPostRecyclerViewAdapter(private val itemList: List<ItemForPost>) :
         holder.postContentTextView.text = currentItem.content
         holder.likeNumberTextView.text = currentItem.like.toString()
 
+        println(currentItem.userPhoto)
+        val imageSource = when {
+            currentItem.userPhoto.contains("B1") -> R.drawable.b1char
+            currentItem.userPhoto.contains("B2") -> R.drawable.b2char
+            currentItem.userPhoto.contains("G1") -> R.drawable.g1char
+            currentItem.userPhoto.contains("G2") -> R.drawable.g2char
+            else -> R.drawable.logo
+        }
+
+        holder.userPhotoImageView.setImageResource(imageSource)
+
+
+
 
         // Set the initial state of the like button based on likedByCurrentUser
         holder.likePostButton.setImageResource(
