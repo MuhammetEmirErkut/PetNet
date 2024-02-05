@@ -28,56 +28,85 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/forumsearch_background"
         android:layout_marginHorizontal="41dp"
         android:layout_marginTop="29dp"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/forumsearch_background"
-        android:orientation="vertical">
+        android:layout_marginBottom="30dp">
 
-        <TextView
-            android:id="@+id/accountDetailtsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="11dp"
-            android:layout_marginTop="12dp"
-            android:text="Account Details"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
-
-        <View
-            android:id="@+id/view12"
+        <LinearLayout
+            android:id="@+id/accountDetailsLayout"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/bone_white" />
-
-        <TextView
-            android:id="@+id/rulesTextView"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="11dp"
-            android:layout_marginTop="12dp"
-            android:text="Application Rules"
-            android:textColor="@color/white"
-            android:textSize="17sp" />
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
 
-        <View
-            android:id="@+id/view13"
+            <TextView
+                android:id="@+id/accountDetailtsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="11dp"
+                android:layout_marginTop="12dp"
+                android:text="Account Details"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+
+            <View
+                android:id="@+id/view12"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/bone_white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/applicationRulesLayout"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/bone_white" />
-
-        <TextView
-            android:id="@+id/accountLogOutTextView"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="11dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:text="Log Out'"
-            android:textColor="@color/red"
-            android:textSize="17sp" />
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/rulesTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="11dp"
+                android:layout_marginTop="12dp"
+                android:text="Application Rules"
+                android:textColor="@color/white"
+                android:textSize="17sp" />
+
+            <View
+                android:id="@+id/view13"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/bone_white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/logOutLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/accountLogOutTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="11dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:text="Log Out'"
+                android:textColor="@color/red"
+                android:textSize="17sp" />
+        </LinearLayout>
+
     </LinearLayout>
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>

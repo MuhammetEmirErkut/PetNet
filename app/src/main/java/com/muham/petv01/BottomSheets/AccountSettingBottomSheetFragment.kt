@@ -15,11 +15,14 @@ import com.muham.petv01.Fragments.AccountFragments.ApplicationRulesFragment
 import com.muham.petv01.MainActivity
 import com.muham.petv01.R
 
+// ...
+
 class AccountSettingBottomSheetFragment: BottomSheetDialogFragment() {
 
     private lateinit var accountLogOutTextView: TextView
     private lateinit var rulesTextView: TextView
     private lateinit var accountDetailtsTextView: TextView
+
     companion object {
         const val TAG = "AccountSettingBottomSheetFragment"
     }
@@ -41,10 +44,10 @@ class AccountSettingBottomSheetFragment: BottomSheetDialogFragment() {
 
         accountLogOutTextView.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
-
+            Log.d("AccountSetting", "Details button clicked!")
             dismiss()
 
-            //Starting Main Activity
+            // Starting Main Activity
             val intent = Intent(context, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -52,20 +55,19 @@ class AccountSettingBottomSheetFragment: BottomSheetDialogFragment() {
 
         rulesTextView.setOnClickListener {
             dismiss()
-
+            Log.d("AccountSetting", "Details button clicked!")
             val applicationRulesFragment = ApplicationRulesFragment()
-            parentFragmentManager.beginTransaction()
+            requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.account_fragment_container, applicationRulesFragment)
                 .addToBackStack("AccountFragment")
                 .commit()
-
         }
 
         accountDetailtsTextView.setOnClickListener {
             dismiss()
-
+            Log.d("AccountSetting", "Details button clicked!")
             val accountDetailsFragment = AccountDetailsFragment()
-            parentFragmentManager.beginTransaction()
+            requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.account_fragment_container, accountDetailsFragment)
                 .addToBackStack("AccountFragment")
                 .commit()

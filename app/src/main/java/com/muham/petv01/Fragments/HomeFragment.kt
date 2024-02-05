@@ -1,7 +1,5 @@
 package com.muham.petv01.Fragments
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -10,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
 import com.muham.petv01.R
 import java.util.concurrent.TimeUnit
 
@@ -18,7 +19,10 @@ class HomeFragment : Fragment() {
     private lateinit var giftImageView: ImageView
     private lateinit var countDownTimer: CountDownTimer
     private var timeLeftInMillis: Long = 0
-    private lateinit var sharedPreferences: SharedPreferences
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+    private lateinit var userId: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,21 +36,46 @@ class HomeFragment : Fragment() {
         timerTextView = view.findViewById(R.id.timerTextView)
         giftImageView = view.findViewById(R.id.giftImageView)
 
-        // SharedPreferences'u al
-        sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        auth = FirebaseAuth.getInstance()
+        userId = auth.currentUser?.uid ?: ""
+        database = FirebaseDatabase.getInstance().reference.child("users").child(userId)
 
-        // Kalan süreyi kontrol et
-        timeLeftInMillis = sharedPreferences.getLong("millisLeft", totalTimeInMillis)
-        updateCountDownText()
-
-        if (timeLeftInMillis != totalTimeInMillis) {
-            startTimer()
-        }
+        // Zamanlayıcıyı kontrol et
+        checkTimer()
 
         giftImageView.setOnClickListener {
-            timeLeftInMillis = totalTimeInMillis
-            startTimer()
+            // Kullanıcı hediye butonuna tıkladığında süreyi sıfırlayıp tekrar başlat
+            resetAndStartTimer()
         }
+    }
+
+    private fun checkTimer() {
+        database.child("millisLeft").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val storedTime = snapshot.getValue(Long::class.java) ?: 0
+                timeLeftInMillis = if (storedTime > System.currentTimeMillis()) {
+                    storedTime - System.currentTimeMillis()
+                } else {
+                    0
+                }
+
+                if (timeLeftInMillis > 0) {
+                    startTimer()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Hata durumunda işlemler
+            }
+        })
+    }
+
+    private fun resetAndStartTimer() {
+        timeLeftInMillis = TOTAL_TIME_IN_MILLIS
+        startTimer()
+
+        // Firebase'e kalan süreyi kaydet
+        database.child("millisLeft").setValue(System.currentTimeMillis() + timeLeftInMillis)
     }
 
     private fun startTimer() {
@@ -57,7 +86,7 @@ class HomeFragment : Fragment() {
             }
 
             override fun onFinish() {
-                timeLeftInMillis = totalTimeInMillis
+                timeLeftInMillis = 0
                 updateCountDownText()
             }
         }.start()
@@ -72,15 +101,7 @@ class HomeFragment : Fragment() {
         timerTextView.text = timeLeftFormatted
     }
 
-    override fun onStop() {
-        super.onStop()
-        countDownTimer.cancel()
-        val editor = sharedPreferences.edit()
-        editor.putLong("millisLeft", timeLeftInMillis)
-        editor.apply()
-    }
-
     companion object {
-        private const val totalTimeInMillis: Long = 24 * 60 * 60 * 1000
+        private const val TOTAL_TIME_IN_MILLIS: Long = 24 * 60 * 60 * 1000
     }
 }
