@@ -35,7 +35,6 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/forumsearch_background"
         android:gravity="start"
-        android:hint="Gönderi başlığını buraya yazın"
         android:paddingStart="10dp"
         android:paddingTop="10dp"
         android:textColor="@color/white"
@@ -55,16 +54,15 @@
         android:id="@+id/post_content_edittext"
         android:layout_width="match_parent"
         android:layout_height="240dp"
+        android:layout_marginHorizontal="30dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginHorizontal="30dp"
+        android:background="@drawable/forumsearch_background"
         android:gravity="start"
         android:paddingStart="10dp"
         android:paddingTop="10dp"
         android:textColor="@color/white"
-        android:background="@drawable/forumsearch_background"
-        android:textColorHint="@color/bone_white"
-        android:hint="Gönderi içeriğinizi buraya yazın" />
+        android:textColorHint="@color/bone_white" />
 
     <!-- Gönder Butonu -->
     <TextView
