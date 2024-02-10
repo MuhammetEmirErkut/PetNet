@@ -107,7 +107,6 @@ class CommentBottomSheetFragment : BottomSheetDialogFragment() {
                 }
         } else {
             Log.w(TAG, "User not authenticated")
-            // Kullanıcı oturum açmamışsa gerekli işlemleri yapabilirsiniz
         }
     }
 
@@ -117,15 +116,12 @@ class CommentBottomSheetFragment : BottomSheetDialogFragment() {
                 if (documentSnapshot.exists()) {
                     val post = documentSnapshot.toObject(ItemForPost::class.java)
 
-                    // Commentleri al
                     val comments = post?.comments ?: emptyList()
 
-                    // RecyclerView için adapter ve layoutManager'ı ayarla
                     val commentRecyclerView = view?.findViewById<RecyclerView>(R.id.commentRecyclerView)
                     val commentAdapter = CommentRecyclerViewAdapter(comments)
                     val commentLayoutManager = LinearLayoutManager(context)
 
-                    // Adapter ve LayoutManager'ı iç içe RecyclerView'e ata
                     commentRecyclerView?.adapter = commentAdapter
                     commentRecyclerView?.layoutManager = commentLayoutManager
                 }
@@ -138,13 +134,12 @@ class CommentBottomSheetFragment : BottomSheetDialogFragment() {
             val commentContent = commentEditText.text.toString().trim()
 
             if (commentContent.isNotEmpty()) {
-                val postId = arguments?.getString("postId") // İlgili postun ID'sini almalısınız
+                val postId = arguments?.getString("postId")
 
                 // Yorumu Firebase'e ekle
                 if (postId != null) {
                     addComment(postId, commentContent)
                 }
-                // Yorum eklendikten sonra, isteğe bağlı olarak UI veya diğer işlemleri gerçekleştirebilirsiniz
             }
         }
     }

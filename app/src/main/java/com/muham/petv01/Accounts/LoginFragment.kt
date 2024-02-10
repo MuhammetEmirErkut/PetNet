@@ -71,12 +71,10 @@ class LoginFragment : Fragment() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Giriş başarılıysa yapılacak işlemler
                     Toast.makeText(activity, "Login successful", Toast.LENGTH_SHORT).show()
                     val intent = Intent(requireContext(), MainActivity::class.java)
                     startActivity(intent)
                 } else {
-                    // Giriş başarısızsa yapılacak işlemler
                     Toast.makeText(activity, "Login failed", Toast.LENGTH_SHORT).show()
                 }
             }

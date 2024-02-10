@@ -1,5 +1,6 @@
 package com.muham.petv01.Fragments
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -114,7 +115,7 @@ class AccountFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    // Hata durumunda burada işlem yapabilirsiniz
+                    Log.e(TAG,"Error for Fetching User Data")
                 }
         }
     }

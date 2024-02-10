@@ -30,8 +30,8 @@ import java.util.Locale
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
-class ForumFragment : Fragment() {
 
+class ForumFragment : Fragment() {
 
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var forumRecyclerView: RecyclerView
@@ -43,9 +43,7 @@ class ForumFragment : Fragment() {
 
     private val likedPostIds = mutableSetOf<String>()
 
-
-
-    // Firestore veritabanı
+    // Firestore database
     private val db = FirebaseFirestore.getInstance()
     private lateinit var auth: FirebaseAuth
 
@@ -76,30 +74,25 @@ class ForumFragment : Fragment() {
         searchImageView = view.findViewById(R.id.searchImageView)
         searchEditText = view.findViewById(R.id.searchEditText)
 
-
         auth = FirebaseAuth.getInstance()
 
-
-
-        // Firestore'dan verileri çekip itemList'e ekleyen fonksiyonu çağır
+        // Call the function to fetch data from Firestore and add it to itemList
         loadForumData()
 
-
-        //Refresh
+        // Refresh
         val swipeRefreshLayout: SwipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
 
         swipeRefreshLayout.setOnRefreshListener {
-            // Yeniden yükleme işlemlerini burada yap
+            // Perform refresh operations here
 
-            // Örneğin, loadForumData() fonksiyonunu çağırabilirsiniz
+            // For example, you can call the loadForumData() function
             refreshForumData()
 
-            // Yeniden yükleme tamamlandığında yenilemeyi bitir
+            // Finish refreshing when done
             swipeRefreshLayout.isRefreshing = false
         }
-        //////////////////
 
-        // ForumFragment içinde, onCreateView() fonksiyonu içinde onClickListener ekle
+        // Add OnClickListener within the ForumFragment, inside the onCreateView() function
         val postButton = view.findViewById<ImageView>(R.id.postButton)
         postButton.setOnClickListener {
             val forumPostFragment = ForumPostFragment()
@@ -109,12 +102,10 @@ class ForumFragment : Fragment() {
                 .commit()
         }
 
-
-        //search
-
+        // Search
         searchImageView.setOnClickListener {
-            val searhText = searchEditText.text.toString()
-            performSearch(searhText)
+            val searchText = searchEditText.text.toString()
+            performSearch(searchText)
         }
 
         // Inflate the layout for this fragment
@@ -124,16 +115,16 @@ class ForumFragment : Fragment() {
     private fun performSearch(searchText: String) {
         val resultItems = mutableListOf<ItemForPost>()
 
-        // Firestore koleksiyonundan verileri çek
+        // Fetch data from Firestore collection
         db.collection("forum")
-            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Yeniden eskiye doğru sırala
+            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Sort from newest to oldest
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     val title = document.getString("title")?.toLowerCase(Locale.getDefault()) ?: ""
                     val content = document.getString("content")?.toLowerCase(Locale.getDefault()) ?: ""
 
-                    // Başlıkta veya içerikte arama yap
+                    // Search in title or content
                     if (title.contains(searchText.toLowerCase(Locale.getDefault())) || content.contains(searchText.toLowerCase(Locale.getDefault()))) {
                         val userPhoto = document.getString("userPhoto") ?: ""
                         val documentId = document.id
@@ -157,7 +148,7 @@ class ForumFragment : Fragment() {
                     }
                 }
 
-                // Güncellenmiş sonuçları RecyclerView'a yükle
+                // Load the updated results into RecyclerView
                 updateRecyclerView(resultItems)
             }
             .addOnFailureListener { exception ->
@@ -180,23 +171,24 @@ class ForumFragment : Fragment() {
         // Notify the adapter of the change
         forumPostRecyclerViewAdapter.notifyDataSetChanged()
     }
+
     private fun refreshForumData() {
         val addedDocumentIds = mutableListOf<String>()
 
-        // Daha önce eklenmiş belgelerin kimliklerini al
+        // Get the IDs of previously added documents
         for (item in itemList) {
             addedDocumentIds.add(item.documentId)
         }
 
         db.collection("forum")
-            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Yeniden eskiye doğru sırala
+            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Sort from newest to oldest
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    // Belge kimliğine eriş
+                    // Get the document ID
                     val documentId = document.id
 
-                    // Eğer bu belge daha önce eklenmişse, geç
+                    // If this document has been added before, skip it
                     if (addedDocumentIds.contains(documentId)) {
                         // Update like count and likedByCurrentUser for existing items in itemList
                         val existingItem = itemList.find { it.documentId == documentId }
@@ -205,7 +197,7 @@ class ForumFragment : Fragment() {
                         continue
                     }
                     val userPhoto = document.getString("userPhoto") ?: ""
-                    // Verileri al ve itemList'e ekle
+                    // Get the data and add it to itemList
                     val title = document.getString("title") ?: ""
                     val content = document.getString("content") ?: ""
                     val userName = document.getString("userName") ?: ""
@@ -225,17 +217,17 @@ class ForumFragment : Fragment() {
 
                     val item = ItemForPost(userPhoto, userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
 
-                    // Yeni belge eklenmeden önce, listeden sil
+                    // Remove the item from the list before adding a new document
                     val removedIndex = itemList.indexOfFirst { it.documentId == documentId }
                     if (removedIndex != -1) {
                         itemList.removeAt(removedIndex)
                     }
 
-                    // Yeni belgeyi listeye ekle
+                    // Add the new document to the list
                     itemList.add(item)
                 }
 
-                // Silinen belgeleri kontrol et
+                // Check for removed documents
                 val removedDocumentIds = addedDocumentIds - documents.map { it.id }
                 for (removedDocumentId in removedDocumentIds) {
                     val removedIndex = itemList.indexOfFirst { it.documentId == removedDocumentId }
@@ -244,10 +236,10 @@ class ForumFragment : Fragment() {
                     }
                 }
 
-                // Yeni sıralama kriterine göre itemList'i sırala
+                // Sort itemList based on the new sorting criteria
                 itemList.sortByDescending { getDateFromDateString(it.time) }
 
-                // Adaptera değişikliği bildir
+                // Notify the adapter of the changes
                 forumPostRecyclerViewAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
@@ -261,15 +253,15 @@ class ForumFragment : Fragment() {
     }
 
     private fun loadForumData() {
-        // Firestore koleksiyonundan verileri çek
+        // Fetch data from Firestore collection
         db.collection("forum")
-            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Yeniden eskiye doğru sırala
+            .orderBy("timestamp", Query.Direction.DESCENDING) // DESCENDING: Sort from newest to oldest
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     val userPhoto = document.getString("userPhoto") ?: ""
-                    val documnetId = document.id
-                    // Verileri al ve itemList'e ekle
+                    val documentId = document.id
+                    // Get the data and add it to itemList
                     val title = document.getString("title") ?: ""
                     val content = document.getString("content") ?: ""
                     val userName = document.getString("username") ?: ""
@@ -281,31 +273,25 @@ class ForumFragment : Fragment() {
                         ""
                     }
 
-                    // Firestore'dan çekilen likes listesini kontrol et
+                    // Check the likes list fetched from Firestore
                     val likesList = document.get("likes") as? List<String> ?: emptyList()
                     val likedByCurrentUser = auth.currentUser?.uid in likesList
 
-                    // Like sayısını likes listesinin eleman sayısı olarak ayarla
+                    // Set the like count to the size of the likes list
                     val likeCount = likesList.size
                     val savesList = document.get("saves") as? List<String> ?: emptyList()
                     val savedByCurrentUser = auth.currentUser?.uid in savesList
 
-                    val item = ItemForPost(userPhoto, userName, time, title, content, documnetId, likeCount, likedByCurrentUser ,savedByCurrentUser)
+                    val item = ItemForPost(userPhoto, userName, time, title, content, documentId, likeCount, likedByCurrentUser, savedByCurrentUser)
                     itemList.add(item)
                 }
-                // Adaptera değişikliği bildir
+                // Notify the adapter of the changes
                 forumPostRecyclerViewAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 Log.w("ForumFragment", "Error getting documents: ", exception)
             }
     }
-
-
-
-
-
-
 
     companion object {
         @JvmStatic

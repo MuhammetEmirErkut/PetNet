@@ -81,7 +81,7 @@ class AccountPetAddFragment : Fragment() {
 
         val suggestions = arrayOf("Bird", "Dog", "Cat")
 
-        // ArrayAdapter'ı oluşturun ve AutoCompleteTextView'a bağlayın
+        // Create ArrayAdapter and link it to the AutoCompleteTextView
         val adapter = ArrayAdapter(requireContext(), R.layout.spinner_selected_item, suggestions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
@@ -89,50 +89,50 @@ class AccountPetAddFragment : Fragment() {
 
         petTypeEditText.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                // Seçilen değeri alın
+                // Get the selected value
                 val selectedPetType = parentView.getItemAtPosition(position).toString()
 
-                // Seçilen değere göre ImageView'ın kaynağını değiştirin
+                // Change the ImageView source based on the selected value
                 updateImageViewBasedOnPetType(selectedPetType)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
-                // Hiçbir şey seçilmediğinde yapılacak işlemler (isteğe bağlı)
+                // Actions to perform when nothing is selected (optional)
             }
         }
 
-
-
         return view
     }
+
     private fun updateImageViewBasedOnPetType(selectedPetType: String) {
         when (selectedPetType) {
             "Dog" -> petTypeImageView.setImageResource(R.drawable.dog)
             "Cat" -> petTypeImageView.setImageResource(R.drawable.cat)
             "Bird" -> petTypeImageView.setImageResource(R.drawable.bird)
-            // Diğer seçeneklere göre ekleyebilirsiniz
+            // You can add according to other options
             else -> petTypeImageView.setImageResource(R.drawable.bird)
         }
     }
+
     private fun addPet() {
-        // Kullanıcının UID'sini al
+        // Get the user's UID
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-        // Eğer kullanıcı oturum açmışsa ve UID mevcutsa devam et
+        // If the user is logged in and UID exists, proceed
         userId?.let {
-            // Firebase Firestore referansını al
+            // Get Firebase Firestore reference
             val db = FirebaseFirestore.getInstance()
 
-            // EditText'lerden girişleri al
+            // Get inputs from EditTexts
             val petName = petNameEditText.text.toString()
             val petAge = petAgeEditText.text.toString()
             val petTypeSpinner = view?.findViewById<Spinner>(R.id.petTypeEditText)
             val selectedPetType = petTypeSpinner?.selectedItem.toString()
             val petId = generatePetId()
 
-            // Eğer bir pet adı girilmişse devam et
+            // If a pet name is entered, proceed
             if (petName.isNotEmpty()) {
-                // Kişinin "pets" dizisine yeni bir evcil hayvan ekleyin
+                // Add a new pet to the "pets" array of the user
                 val pet = hashMapOf(
                     "name" to petName,
                     "age" to petAge,
@@ -140,7 +140,7 @@ class AccountPetAddFragment : Fragment() {
                     "id" to petId
                 )
 
-                // Firestore'daki belirli bir belgeyi güncelleyin veya oluşturun
+                // Update or create a specific document in Firestore
                 db.collection("Persons").document(userId).update("pets", FieldValue.arrayUnion(pet))
                     .addOnSuccessListener {
                         Log.w(TAG,"Pets added")
@@ -151,10 +151,12 @@ class AccountPetAddFragment : Fragment() {
             }
         }
     }
+
     private fun generatePetId(): String {
-        // UUID.randomUUID() kullanarak benzersiz bir ID oluşturun
+        // Generate a unique ID using UUID.randomUUID()
         return UUID.randomUUID().toString()
     }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (enter) {
             return AnimationUtils.loadAnimation(activity, R.anim.slide_in_from_top)

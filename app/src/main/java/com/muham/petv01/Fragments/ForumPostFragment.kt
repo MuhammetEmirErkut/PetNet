@@ -63,7 +63,7 @@ class ForumPostFragment : Fragment() {
 
 
 
-        auth = FirebaseAuth.getInstance() // auth nesnesini burada başlatın
+        auth = FirebaseAuth.getInstance()
 
         // Inside the postSendButton.setOnClickListener block
         postSendButton.setOnClickListener {

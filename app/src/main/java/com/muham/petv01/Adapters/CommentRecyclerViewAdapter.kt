@@ -14,7 +14,6 @@ class CommentRecyclerViewAdapter(private val commentList: List<com.muham.petv01.
     inner class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val commentUserName: TextView = itemView.findViewById(R.id.commentUserName)
         val commentContent: TextView = itemView.findViewById(R.id.commentContent)
-        // Diğer gerekli görüntüleme öğeleri buraya ekleyebilirsiniz
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -31,10 +30,6 @@ class CommentRecyclerViewAdapter(private val commentList: List<com.muham.petv01.
             holder.commentUserName.text = currentComment.userName
             holder.commentContent.text = currentComment.content
         }
-
-        // Diğer gerekli görüntüleme öğelerini güncelleyin
-
-        // İhtiyaca göre event dinleyicilerini ekleyebilirsiniz
     }
 
     override fun getItemCount(): Int {

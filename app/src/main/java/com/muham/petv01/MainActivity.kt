@@ -1,7 +1,10 @@
 package com.muham.petv01
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -30,18 +33,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUserLoggedIn() {
-
         auth = FirebaseAuth.getInstance()
-        // Mevcut kullanıcıyı al
+
         val currentUser = auth.currentUser
 
-        // Kullanıcı mevcutsa ve oturum açıksa true döndür
         val isLoggedIn = currentUser != null
 
-        // Sonuçları kontrol et
         if (isLoggedIn) {
+            // User is logged in
             setContentView(R.layout.activity_main)
-
 
             bottomNavigationView = findViewById(R.id.mainBottomNav)
             mainViewPager2 = findViewById(R.id.pagerMain)
@@ -69,14 +69,37 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         } else {
+            // User is not logged in
             setContentView(R.layout.signin_screen)
+
+            if (!isNotificationSettingsOpenedBefore()) {
+                openAppNotificationSettings()
+                setNotificationSettingsOpened()
+            }
 
             signinViewPager2 = findViewById(R.id.signinViewPager)
             signinadapter = FragmentAccountAdapter(supportFragmentManager, lifecycle)
 
             signinViewPager2.adapter = signinadapter
-
         }
     }
 
+    private fun isNotificationSettingsOpenedBefore(): Boolean {
+        val sharedPreferences = getPreferences(MODE_PRIVATE)
+        return sharedPreferences.getBoolean("notification_settings_opened", false)
+    }
+
+    private fun setNotificationSettingsOpened() {
+        val sharedPreferences = getPreferences(MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("notification_settings_opened", true)
+        editor.apply()
+    }
+
+    private fun openAppNotificationSettings() {
+        val intent = Intent()
+        intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+        intent.data = Uri.fromParts("package", packageName, null)
+        startActivity(intent)
+    }
 }

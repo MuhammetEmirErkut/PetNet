@@ -57,7 +57,7 @@ class AccountPostsFragment : Fragment() {
         accountPostsRecyclerView.adapter = accountPostsRecyclerViewAdapter
         accountPostsRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        // Kullanıcının kendi UID'sini al
+        // Get the current user's UID
         val currentUserUid = auth.currentUser?.uid
 
         accountPostsSwipeRefreshLayout.setOnRefreshListener {
@@ -66,15 +66,16 @@ class AccountPostsFragment : Fragment() {
             accountPostsSwipeRefreshLayout.isRefreshing = false
         }
 
-        // Kullanıcının UID'sini kullanarak kendi postlarını getir
+        // Get the user's posts using their UID
         loadAccountPosts(currentUserUid)
 
         return view
     }
+
     private fun refreshForumData(currentUserUid: String?) {
         val addedDocumentIds = mutableListOf<String>()
 
-        // Daha önce eklenmiş belgelerin kimliklerini al
+        // Get the IDs of previously added documents
         for (item in postList) {
             addedDocumentIds.add(item.documentId)
         }
@@ -118,7 +119,7 @@ class AccountPostsFragment : Fragment() {
                             postList.removeAt(removedIndex)
                         }
                     }
-                    // Adaptera değişikliği bildir
+                    // Notify the adapter of the changes
                     accountPostsRecyclerViewAdapter.notifyDataSetChanged()
                 }
                 .addOnFailureListener { exception ->
@@ -157,7 +158,7 @@ class AccountPostsFragment : Fragment() {
                         postList.add(item)
                     }
 
-                    // Adaptera değişikliği bildir
+                    // Notify the adapter of the changes
                     accountPostsRecyclerViewAdapter.notifyDataSetChanged()
                 }
                 .addOnFailureListener { exception ->

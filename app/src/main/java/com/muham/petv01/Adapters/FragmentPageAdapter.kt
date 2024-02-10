@@ -19,7 +19,7 @@ class FragmentPageAdapter (
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> HomeFragment()
-            1 -> ForumFragment() // ForumPostFragment'ı buraya ekleyin
+            1 -> ForumFragment()
             2 -> AccountFragment()
             else -> HomeFragment()
         }

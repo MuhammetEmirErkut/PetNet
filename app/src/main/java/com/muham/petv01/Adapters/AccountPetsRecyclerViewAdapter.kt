@@ -54,13 +54,12 @@ class AccountPetsRecyclerViewAdapter(
 
     }
     private fun setPetTypeImage(imageView: ImageView, petType: String) {
-        // Firebase'den alınan petType bilgisine göre ImageView'in src'sini ayarla
         when (petType) {
             "Bird" -> imageView.setImageResource(R.drawable.bird)
             "Dog" -> imageView.setImageResource(R.drawable.dog)
             "Cat" -> imageView.setImageResource(R.drawable.cat)
-            // Diğer türler için gerekli durumları ekleyebilirsiniz
-            else -> imageView.setImageResource(R.drawable.dog) // Varsayılan bir görüntü belirleyebilirsiniz
+
+            else -> imageView.setImageResource(R.drawable.dog)
         }
     }
 

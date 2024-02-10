@@ -69,24 +69,21 @@ class AccountDetailsFragment : Fragment() {
         editEmailEditText = view.findViewById(R.id.editEmailEditText)
         editPasswordEditText = view.findViewById(R.id.editPasswordEditText)
 
-
-
-
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-        // UID varsa ve Firestore'da ilgili belge varsa, mevcut bilgileri alın
+        // If UID exists and there is a corresponding document in Firestore, retrieve the current information
         if (uid != null) {
             db.collection("Persons").document(uid)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        // Firestore'dan alınan bilgileri kullanarak EditText'leri doldurun
+                        // Fill EditTexts with information retrieved from Firestore
                         editNameEditText.setText(document.getString("firstName"))
                         editSurnameEditText.setText(document.getString("lastName"))
                         editEmailEditText.setText(document.getString("email"))
                         editPasswordEditText.setText(document.getString("password"))
 
-                        // İlgili pet tipine göre ImageView'ın kaynağını değiştirin
+                        // Change the ImageView source based on the relevant pet type
                         val petType = document.getString("petType")
                         if (petType != null) {
                             updateImageViewBasedOnPetType(petType)
@@ -102,14 +99,13 @@ class AccountDetailsFragment : Fragment() {
             updateProfile()
         }
 
-
         accountdetails_back_button.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
         val suggestions = arrayOf("G1", "B1", "B2", "G2")
 
-        // ArrayAdapter'ı oluşturun ve AutoCompleteTextView'a bağlayın
+        // Create ArrayAdapter and link it to the AutoCompleteTextView
         val adapter = ArrayAdapter(requireContext(), R.layout.spinner_selected_item, suggestions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
@@ -117,22 +113,23 @@ class AccountDetailsFragment : Fragment() {
 
         userPhotoChangeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>, selectedItemView: View?, position: Int, id: Long) {
-                // Seçilen değeri alın
+                // Get the selected value
                 val selectedPetType = parentView.getItemAtPosition(position).toString()
 
-                // Seçilen değere göre ImageView'ın kaynağını değiştirin
+                // Change the ImageView source based on the selected value
                 updateImageViewBasedOnPetType(selectedPetType)
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>) {
-                // Hiçbir şey seçilmediğinde yapılacak işlemler (isteğe bağlı)
+                // Actions to perform when nothing is selected (optional)
             }
         }
 
         return view
     }
+
     private fun updateProfile() {
-        // EditText'lerden bilgileri alın
+        // Retrieve information from EditTexts
         val newName = editNameEditText.text.toString()
         val newSurname = editSurnameEditText.text.toString()
         val newEmail = editEmailEditText.text.toString()
@@ -140,12 +137,12 @@ class AccountDetailsFragment : Fragment() {
         val userPhotoSpinner = view?.findViewById<Spinner>(R.id.userPhotoChangeSpinner)
         val userPhoto = userPhotoSpinner?.selectedItem.toString()
 
-        // FirebaseAuth ile giriş yapmış kullanıcının UID'sini alın
+        // Get the UID of the user logged in with FirebaseAuth
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-        // UID varsa ve EditText'lerden alınan bilgiler boş değilse güncelleme işlemini yapın
+        // If UID exists and information from EditTexts is not empty, perform the update operation
         if (uid != null && newName.isNotBlank() && newSurname.isNotBlank() && newEmail.isNotBlank() && newPassword.isNotBlank()) {
-            // Persons koleksiyonundaki ilgili belgeyi güncelle
+            // Update the relevant document in the Persons collection
             db.collection("Persons").document(uid)
                 .update(
                     "firstName", newName,
@@ -162,17 +159,18 @@ class AccountDetailsFragment : Fragment() {
                     Toast.makeText(requireContext(), "Profile Update Failed", Toast.LENGTH_SHORT).show()
                 }
         } else {
-            // Eksik veya hatalı bilgi durumunda kullanıcıyı bilgilendirin
+            // Inform the user in case of missing or incorrect information
             Toast.makeText(requireContext(), "Fill in the information completely", Toast.LENGTH_SHORT).show()
         }
     }
+
     private fun updateImageViewBasedOnPetType(selectedPetType: String) {
         when (selectedPetType) {
             "B1" -> userPhotoImageView.setImageResource(R.drawable.b1char)
             "B2" -> userPhotoImageView.setImageResource(R.drawable.b2char)
             "G1" -> userPhotoImageView.setImageResource(R.drawable.g1char)
             "G2" -> userPhotoImageView.setImageResource(R.drawable.g2char)
-            // Diğer seçeneklere göre ekleyebilirsiniz
+            // You can add according to other options
             else -> userPhotoImageView.setImageResource(R.drawable.dog)
         }
     }
@@ -196,6 +194,7 @@ class AccountDetailsFragment : Fragment() {
                 }
             }
     }
+
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         if (enter) {
             return AnimationUtils.loadAnimation(activity, R.anim.slide_in_from_top)

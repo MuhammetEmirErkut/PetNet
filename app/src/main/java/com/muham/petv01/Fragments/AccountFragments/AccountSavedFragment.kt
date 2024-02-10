@@ -65,7 +65,6 @@ class AccountSavedFragment : Fragment() {
         accountSavedRecyclerView.adapter = accountPostsRecyclerViewAdapter
         accountSavedRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        // Kullanıcının kendi UID'sini al
         val currentUserUid = auth.currentUser?.uid
 
         accountSavedSwipeRefreshLayout.setOnRefreshListener {
@@ -73,7 +72,6 @@ class AccountSavedFragment : Fragment() {
             accountSavedSwipeRefreshLayout.isRefreshing = false
         }
 
-        // Kullanıcının UID'sini kullanarak kendi postlarını getir
         loadAccountSaved(currentUserUid)
 
         return view
@@ -83,7 +81,6 @@ class AccountSavedFragment : Fragment() {
 
         val addedDocumentIds = mutableListOf<String>()
 
-        // Daha önce eklenmiş belgelerin kimliklerini al
         for (item in postList) {
             addedDocumentIds.add(item.documentId)
         }
@@ -127,10 +124,7 @@ class AccountSavedFragment : Fragment() {
                             postList.removeAt(removedIndex)
                         }
                     }
-                    // Yeni sıralama kriterine göre itemList'i sırala
-                    //postList.sortByDescending { getDateFromDateString(it.time) }
 
-                    // Adaptera değişikliği bildir
                     accountPostsRecyclerViewAdapter.notifyDataSetChanged()
                 }
                 .addOnFailureListener { exception ->
@@ -169,7 +163,7 @@ class AccountSavedFragment : Fragment() {
                         postList.add(item)
                     }
 
-                    // Adaptera değişikliği bildir
+
                     accountPostsRecyclerViewAdapter.notifyDataSetChanged()
                 }
                 .addOnFailureListener { exception ->

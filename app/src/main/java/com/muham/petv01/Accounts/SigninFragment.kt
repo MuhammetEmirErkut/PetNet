@@ -58,7 +58,7 @@ class SigninFragment : Fragment() {
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
 
-            // Firebase Authentication işlemleri
+            // Firebase Authentication
             auth = FirebaseAuth.getInstance()
 
             auth.createUserWithEmailAndPassword(email, password)
