@@ -200,7 +200,7 @@ class ForumFragment : Fragment() {
                     // Get the data and add it to itemList
                     val title = document.getString("title") ?: ""
                     val content = document.getString("content") ?: ""
-                    val userName = document.getString("userName") ?: ""
+                    val userName = document.getString("username") ?: ""
                     val timestamp = document.getTimestamp("timestamp")
                     val time = if (timestamp != null) {
                         val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
